@@ -1,5 +1,3 @@
-key.betterfoliage.gui=Открыть настройки
-
 betterfoliage.global.enabled=Включить мод
 betterfoliage.global.enabled.tooltip=Если установлено на false, BetterFoliage не будет ничего рендерить
 
@@ -19,67 +17,42 @@ betterfoliage.population=Популяция
 betterfoliage.population.tooltip=Шанс (N к 64), что блок будет иметь эту функцию
 betterfoliage.shaderWind=Шейдерные эффекты ветра
 betterfoliage.shaderWind.tooltip=Применить эффекты ветра с ShaderMod для этого элемента?
-betterfoliage.distance=Лимит дистанции
-betterfoliage.distance.tooltip=Максимальное расстояние от игрока для рендеринга этой функции
 
 betterfoliage.blocks=Типы блоков
 betterfoliage.blocks.tooltip=Настройки списка классов блоков, которые будут иметь примененные к ним функции
 
 betterfoliage.blocks.dirtWhitelist=Белый список земли
 betterfoliage.blocks.dirtBlacklist=Черный список земли
-betterfoliage.blocks.dirtWhitelist.arrayEntry=%d записей
-betterfoliage.blocks.dirtBlacklist.arrayEntry=%d записей
+betterfoliage.blocks.dirtWhitelist.tooltip=Блоки, которые будут восприниматься в качестве земли. Влияет на камыши, водоросли, соединенную траву.
+betterfoliage.blocks.dirtBlacklist.tooltip=Блоки, которые не будут восприниматься в качестве земли. Влияет на камыши, водоросли, соединенную траву.
 
-betterfoliage.blocks.grassWhitelist=Белый список травы
-betterfoliage.blocks.grassBlacklist=Черный список травы
-betterfoliage.blocks.grassWhitelist.arrayEntry=%d записей
-betterfoliage.blocks.grassBlacklist.arrayEntry=%d записей
+betterfoliage.blocks.grassClassesWhitelist=Белый список травы
+betterfoliage.blocks.grassClassesBlacklist=Черный список травы
+betterfoliage.blocks.grassClassesWhitelist.tooltip=Блоки, которые будут восприниматься в качестве травы. Влияет на короткую и соединенную траву.
+betterfoliage.blocks.grassClassesBlacklist.tooltip=Блоки, которые не будут восприниматься в качестве травы. Влияет на короткую и соединенную траву.
 
-betterfoliage.blocks.leavesWhitelist=Белый список листвы
-betterfoliage.blocks.leavesBlacklist=Черный список листвы
-betterfoliage.blocks.leavesWhitelist.arrayEntry=%d записей
-betterfoliage.blocks.leavesBlacklist.arrayEntry=%d записей
+betterfoliage.blocks.leavesClassesWhitelist=Белый список листвы
+betterfoliage.blocks.leavesClassesBlacklist=Черный список листвы
+betterfoliage.blocks.leavesClassesWhitelist.tooltip=Блоки, которые будут восприниматься в качестве листвы. Влияет на дополнительную листву, падающую листву. Листва будут рендериться с ID листвы в шейдер-программах.
+betterfoliage.blocks.leavesClassesBlacklist.tooltip=Блоки, которые никогда не будут восприниматься как листва. Влияет на дополнительную листву, падающую листву. Листва будут рендериться с ID листвы в шейдер-программах.
 
 betterfoliage.blocks.cropsWhitelist=Белый список урожая
 betterfoliage.blocks.cropsBlacklist=Черный список урожая
-betterfoliage.blocks.cropsWhitelist.arrayEntry=%d записей
-betterfoliage.blocks.cropsBlacklist.arrayEntry=%d записей
-
-betterfoliage.blocks.logsWhitelist=Белый список древесины
-betterfoliage.blocks.logsBlacklist=Черный список древесины
-betterfoliage.blocks.logsWhitelist.arrayEntry=%d записей
-betterfoliage.blocks.logsBlacklist.arrayEntry=%d записей
+betterfoliage.blocks.cropsWhitelist.tooltip=Блоки, которые будут восприниматься как культуры. Культуры будут рендериться с ID высокой травы в шейдер-программах.
+betterfoliage.blocks.cropsBlacklist.tooltip= Блоки, которые никогда не будут восприниматься как культуры. Культуры будут рендериться с ID высокой травы в шейдер-программах.
 
 betterfoliage.blocks.sandWhitelist=Белый список песка
 betterfoliage.blocks.sandBlacklist=Черный список песка
-betterfoliage.blocks.sandWhitelist.arrayEntry=%d записей
-betterfoliage.blocks.sandBlacklist.arrayEntry=%d записей
+betterfoliage.blocks.sandWhitelist.tooltip=Блоки, которые будут восприниматься в качестве песка. Влияет на кораллы.
+betterfoliage.blocks.sandBlacklist.tooltip=Блоки, которые никогда не будут восприниматься в качестве песка. Влияет на кораллы.
 
 betterfoliage.blocks.lilypadWhitelist=Белый список кувшинок
 betterfoliage.blocks.lilypadBlacklist=Черный список кувшинок
-betterfoliage.blocks.lilypadWhitelist.arrayEntry=%d записей
-betterfoliage.blocks.lilypadBlacklist.arrayEntry=%d записей
+betterfoliage.blocks.lilypadWhitelist.tooltip=Блоки, которые будут восприниматься в качестве кувшинок. Влияет на улучшенные кувшинки.
+betterfoliage.blocks.lilypadBlacklist.tooltip=Блоки, которые никогда не будут восприниматься в качестве кувшинок. Влияет на улучшенные кувшинки.
 
 betterfoliage.blocks.cactusWhitelist=Белый список кактусов
 betterfoliage.blocks.cactusBlacklist=Черный список кактусов
-betterfoliage.blocks.cactusWhitelist.arrayEntry=%d записей
-betterfoliage.blocks.cactusBlacklist.arrayEntry=%d записей
-
-
-betterfoliage.blocks.dirtWhitelist.tooltip=Блоки, которые будут восприниматься в качестве земли. Влияет на камыши, водоросли, соединенную траву.
-betterfoliage.blocks.dirtBlacklist.tooltip=Блоки, которые не будут восприниматься в качестве земли. Влияет на камыши, водоросли, соединенную траву.
-betterfoliage.blocks.grassWhitelist.tooltip=Блоки, которые будут восприниматься в качестве травы. Влияет на короткую и соединенную траву.
-betterfoliage.blocks.grassBlacklist.tooltip=Блоки, которые не будут восприниматься в качестве травы. Влияет на короткую и соединенную траву.
-betterfoliage.blocks.leavesWhitelist.tooltip=Блоки, которые будут восприниматься в качестве листвы. Влияет на дополнительную листву, падающую листву. Листва будут рендериться с ID листвы в шейдер-программах.
-betterfoliage.blocks.leavesBlacklist.tooltip=Блоки, которые никогда не будут восприниматься как листва. Влияет на дополнительную листву, падающую листву. Листва будут рендериться с ID листвы в шейдер-программах.
-betterfoliage.blocks.cropsWhitelist.tooltip=Блоки, которые будут восприниматься как культуры. Культуры будут рендериться с ID высокой травы в шейдер-программах.
-betterfoliage.blocks.cropsBlacklist.tooltip= Блоки, которые никогда не будут восприниматься как культуры. Культуры будут рендериться с ID высокой травы в шейдер-программах.
-betterfoliage.blocks.logsWhitelist.tooltip=Блоки, которые будут восприниматься в качестве деревянных брёвен. Влияет на цилиндрические брёвна.
-betterfoliage.blocks.logsBlacklist.tooltip=Блоки, которые никогда не будут восприниматься в качестве деревянных брёвен. Влияет на цилиндрические брёвна.
-betterfoliage.blocks.sandWhitelist.tooltip=Блоки, которые будут восприниматься в качестве песка. Влияет на кораллы.
-betterfoliage.blocks.sandBlacklist.tooltip=Блоки, которые никогда не будут восприниматься в качестве песка. Влияет на кораллы.
-betterfoliage.blocks.lilypadWhitelist.tooltip=Блоки, которые будут восприниматься в качестве кувшинок. Влияет на улучшенные кувшинки.
-betterfoliage.blocks.lilypadBlacklist.tooltip=Блоки, которые никогда не будут восприниматься в качестве кувшинок. Влияет на улучшенные кувшинки.
 betterfoliage.blocks.cactusWhitelist.tooltip=Блоки, которые будут восприниматься в качестве кактусов. Влияет на улучшенные кактусы.
 betterfoliage.blocks.cactusBlacklist.tooltip=Блоки, которые никогда не будут восприниматься в качестве кувшинок. Влияет на улучшенные кактусы.
 
@@ -94,17 +67,10 @@ betterfoliage.shortGrass.useGenerated=Использовать сгенерир�
 betterfoliage.shortGrass.useGenerated.tooltip=Сгенерированная текстура создается путём разрезания текстуры высокой травы с активного ресурс-пака пополам.
 betterfoliage.shortGrass.myceliumEnabled=Включить мицелий
 betterfoliage.shortGrass.myceliumEnabled.tooltip=Включить эту особенность для блоков мицелия?
-betterfoliage.shortGrass.grassEnabled=Включить траву
-betterfoliage.shortGrass.grassEnabled.tooltip=Включить эту особенность для блоков травы?
 betterfoliage.shortGrass.snowEnabled=Включить траву под снегом
 betterfoliage.shortGrass.snowEnabled.tooltip=Включить эту особенность для заснеженных блоков травы?
 betterfoliage.shortGrass.saturationThreshold=Порог насыщения
 betterfoliage.shortGrass.saturationThreshold.tooltip=Насыщенность цвета разделяется на: "обесцвеченные" блоки (используя цвет биома) и "цветные" блоки (используя их собственный цвет)
-
-betterfoliage.hangingGrass=Висячая трава
-betterfoliage.hangingGrass.tooltip=Пучки травы свисают вниз с верхних краев блока травы.
-betterfoliage.hangingGrass.separation=Разделение
-betterfoliage.hangingGrass.separation.tooltip=Как долго подвесная трава выделяется из блока?
 
 betterfoliage.cactus=Улучшенные кактусы
 betterfoliage.cactus.tooltip=Улучшить кактус с дополнительными частицами и плавными тенями.
@@ -120,13 +86,11 @@ betterfoliage.reed=Камыши
 betterfoliage.reed.tooltip=Мелководные камыши на блоках земли.
 betterfoliage.reed.biomes=Список биомов
 betterfoliage.reed.biomes.tooltip=Настройка биомов, в которых камышам разрешено появляться.
-betterfoliage.reed.biomes.tooltip.element=Должны ли камыши встречаться в %s биоме?
 
 betterfoliage.algae=Морские водоросли
 betterfoliage.algae.tooltip=Глубоководные водоросли на блоках земли.
 betterfoliage.algae.biomes=Список биомов
 betterfoliage.algae.biomes.tooltip=Настройка биомов, в которых водорослям разрешено появляться.
-betterfoliage.algae.biomes.tooltip.element=Должны ли водоросли встречаться в %s биоме?
 
 betterfoliage.coral=Кораллы
 betterfoliage.coral.tooltip=Кораллы на песчаных блоках в глубокой воде.
@@ -138,7 +102,6 @@ betterfoliage.coral.chance=Шанс кораллов
 betterfoliage.coral.chance.tooltip=Шанс (N in 64) появления кораллов на определенном блоке.
 betterfoliage.coral.biomes=Список биомов
 betterfoliage.coral.biomes.tooltip=Настройка биомов, в которых разрешено появляться кораллам.
-betterfoliage.coral.biomes.tooltip.element=Должны ли кораллы появляться в %s биоме?
 betterfoliage.coral.shallowWater=Мелководные кораллы
 betterfoliage.coral.shallowWater.tooltip=Должны ли появляться кораллы в воде, глубиной в 1 блок?
 
@@ -188,26 +151,6 @@ betterfoliage.risingSoul.trailLength.tooltip=Количество предыду
 betterfoliage.risingSoul.trailDensity=Плотность следов
 betterfoliage.risingSoul.trailDensity.tooltip=Рендер каждой предыдущий N’ой позиции в следах частиц.
 
-
 betterfoliage.connectedGrass=Соединенные текстуры травы
 betterfoliage.connectedGrass.enabled=Включить
 betterfoliage.connectedGrass.enabled.tooltip=Если блок травы находится над блоком земли: прорисовать верхнюю текстуру травы на всех сторонах блока травы.
-
-betterfoliage.roundLogs=Цилиндрические брёвна
-betterfoliage.roundLogs.tooltip=Соединить круглые блоки в сплошные, полные блоки?
-betterfoliage.roundLogs.connectSolids=Соединение в крупные брёвна
-betterfoliage.roundLogs.connectSolids.tooltip=Соединить круглые блоки в сплошные, полные блоки?
-betterfoliage.roundLogs.connectPerpendicular=Соединение в перпендикулярные брёвна
-betterfoliage.roundLogs.connectPerpendicular.tooltip=Соединить круглые брёвна к перпендикулярным брёвнам относительно их оси?
-betterfoliage.roundLogs.lenientConnect=Мягкое округление
-betterfoliage.roundLogs.lenientConnect.tooltip=Соединение в параллельные круглые брёвна L-формы, не только 2х2.
-betterfoliage.roundLogs.connectGrass=Соединенная трава
-betterfoliage.roundLogs.connectGrass.tooltip=Заменяет землю под деревьями на траву, если она есть поблизости.
-betterfoliage.roundLogs.radiusSmall=Радиус фаски
-betterfoliage.roundLogs.radiusSmall.tooltip=Радиус обрезки углов от бревна.
-betterfoliage.roundLogs.radiusLarge=Радиус соединенной фаски
-betterfoliage.roundLogs.radiusLarge.tooltip=Радиус среза внешнего угла соединённых брёвен.
-betterfoliage.roundLogs.dimming=Затемнение
-betterfoliage.roundLogs.dimming.tooltip=Затемнить неясные длинные грани.
-betterfoliage.roundLogs.zProtection=Z-Защита
-betterfoliage.roundLogs.zProtection.tooltip=Для масштабирования параллельных битов соединения бревен, чтобы остановить Z-бой (мерцание). Попробуйте установить его как можно выше, для устранения мерцания.

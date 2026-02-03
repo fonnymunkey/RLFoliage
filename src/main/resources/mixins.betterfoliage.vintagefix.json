@@ -1,0 +1,17 @@
+{
+  "required": true,
+  "package": "betterfoliage.mixin",
+  "refmap": "mixins.betterfoliage.refmap.json",
+  "compatibilityLevel": "JAVA_8",
+  "target": "@env(DEFAULT)",
+  "minVersion": "0.8",
+  "plugin": "betterfoliage.BetterFoliageConfigPlugin",
+  "mixins": [
+  ],
+  "injectors": {
+    "maxShiftBy": 10
+  },
+  "client": [
+    "vintagefix.MixinMixinModelManager"
+  ]
+}

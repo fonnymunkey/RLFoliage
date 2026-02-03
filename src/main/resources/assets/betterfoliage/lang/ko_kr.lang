@@ -1,5 +1,3 @@
-key.betterfoliage.gui=설정
-
 betterfoliage.global.enabled=모드 활성화
 betterfoliage.global.enabled.tooltip=비활성화 할 경우, 환경강화모드 렌더링이 보이지 않습니다.
 
@@ -19,67 +17,42 @@ betterfoliage.population=주민
 betterfoliage.population.tooltip=자격을 갖춘 블럭의 기능 확률(N 분의 64)
 betterfoliage.shaderWind=쉐이더 바람 효과
 betterfoliage.shaderWind.tooltip=바람효과를 쉐이더에 적용시키겠습니까?
-betterfoliage.distance=거리 제한
-betterfoliage.distance.tooltip=이 기능을 렌더링하는 플레이어의 최대거리
 
 betterfoliage.blocks=블록 타입
 betterfoliage.blocks.tooltip=세팅 된 것에 따라 블록이 바뀔 것입니다.
 
 betterfoliage.blocks.dirtWhitelist=흙 허용목록
 betterfoliage.blocks.dirtBlacklist=흙 차단목록
-betterfoliage.blocks.dirtWhitelist.arrayEntry=%d entries
-betterfoliage.blocks.dirtBlacklist.arrayEntry=%d entries
+betterfoliage.blocks.dirtWhitelist.tooltip=흙으로 인식됩니다. 갈대, 조류, 잔디 텍스쳐 연결에 영향을 줍니다.
+betterfoliage.blocks.dirtBlacklist.tooltip=흙으로 인식 되지 않습니다. 갈대, 조류, 잔디 텍스쳐 연결에 영향을 주지 않습니다.
 
-betterfoliage.blocks.grassWhitelist=잔디 허용목록
-betterfoliage.blocks.grassBlacklist=잔디 차단목록
-betterfoliage.blocks.grassWhitelist.arrayEntry=%d entries
-betterfoliage.blocks.grassBlacklist.arrayEntry=%d entries
+betterfoliage.blocks.grassClassesWhitelist=잔디 허용목록
+betterfoliage.blocks.grassClassesBlacklist=잔디 차단목록
+betterfoliage.blocks.grassClassesWhitelist.tooltip=잔디로 인식됩니다. 짧은 잔디, 잔디 텍스쳐 연결에 영향을 줍니다.
+betterfoliage.blocks.grassClassesBlacklist.tooltip=잔디로 인식 되지 않습니다. 짧은 잔디, 잔디 텍스쳐 연결에 영향을 주지 않습니다.
 
-betterfoliage.blocks.leavesWhitelist=잎 허용목록
-betterfoliage.blocks.leavesBlacklist=잎 차단목록
-betterfoliage.blocks.leavesWhitelist.arrayEntry=%d entries
-betterfoliage.blocks.leavesBlacklist.arrayEntry=%d entries
+betterfoliage.blocks.leavesClassesWhitelist=잎 허용목록
+betterfoliage.blocks.leavesClassesBlacklist=잎 차단목록
+betterfoliage.blocks.leavesClassesWhitelist.tooltip=잎으로 인식됩니다. 추가 잎, 떨어지는 잎에 영향을 줍니다.
+betterfoliage.blocks.leavesClassesBlacklist.tooltip=잎으로 인식 되지 않습니다. 추가 잎, 떨어지는 잎에 영향을 주지 않습니다.
 
 betterfoliage.blocks.cropsWhitelist=농작물 허용목록
 betterfoliage.blocks.cropsBlacklist=농작물 차단목록
-betterfoliage.blocks.cropsWhitelist.arrayEntry=%d entries
-betterfoliage.blocks.cropsBlacklist.arrayEntry=%d entries
-
-betterfoliage.blocks.logsWhitelist=나무 허용목록
-betterfoliage.blocks.logsBlacklist=나무 차단목록
-betterfoliage.blocks.logsWhitelist.arrayEntry=%d entries
-betterfoliage.blocks.logsBlacklist.arrayEntry=%d entries
+betterfoliage.blocks.cropsWhitelist.tooltip=농작물로 인식됩니다. 농작물은 쉐이더 적용하면 큰잔디로 렌더링 됩니다.
+betterfoliage.blocks.cropsBlacklist.tooltip=농작물로 인식 되지 않습니다. 농작물은 쉐이더 적용하면 큰잔디로 렌더링 되지 않습니다.
 
 betterfoliage.blocks.sandWhitelist=모래 허용목록
 betterfoliage.blocks.sandBlacklist=모래 차단목록
-betterfoliage.blocks.sandWhitelist.arrayEntry=%d entries
-betterfoliage.blocks.sandBlacklist.arrayEntry=%d entries
+betterfoliage.blocks.sandWhitelist.tooltip=모래로 인식됩니다. 산호에 영향을 줍니다
+betterfoliage.blocks.sandBlacklist.tooltip=모래로 인식되지 않습니다. 산호에 영향을 주지 않습니다.
 
 betterfoliage.blocks.lilypadWhitelist=연꽃 허용목록
 betterfoliage.blocks.lilypadBlacklist=연꽃 차단목록
-betterfoliage.blocks.lilypadWhitelist.arrayEntry=%d entries
-betterfoliage.blocks.lilypadBlacklist.arrayEntry=%d entries
+betterfoliage.blocks.lilypadWhitelist.tooltip=연꽃으로 인식됩니다. 보다 나은 연꽃에 영향을 줍니다.
+betterfoliage.blocks.lilypadBlacklist.tooltip=연꽃으로 인식되지 않습니다. 보다 나은 연꽃에 영향을 주지 않습니다.
 
 betterfoliage.blocks.cactusWhitelist=선인장 허용목록
 betterfoliage.blocks.cactusBlacklist=선인장 차단목록
-betterfoliage.blocks.cactusWhitelist.arrayEntry=%d entries
-betterfoliage.blocks.cactusBlacklist.arrayEntry=%d entries
-
-
-betterfoliage.blocks.dirtWhitelist.tooltip=흙으로 인식됩니다. 갈대, 조류, 잔디 텍스쳐 연결에 영향을 줍니다.
-betterfoliage.blocks.dirtBlacklist.tooltip=흙으로 인식 되지 않습니다. 갈대, 조류, 잔디 텍스쳐 연결에 영향을 주지 않습니다.
-betterfoliage.blocks.grassWhitelist.tooltip=잔디로 인식됩니다. 짧은 잔디, 잔디 텍스쳐 연결에 영향을 줍니다.
-betterfoliage.blocks.grassBlacklist.tooltip=잔디로 인식 되지 않습니다. 짧은 잔디, 잔디 텍스쳐 연결에 영향을 주지 않습니다.
-betterfoliage.blocks.leavesWhitelist.tooltip=잎으로 인식됩니다. 추가 잎, 떨어지는 잎에 영향을 줍니다. 
-betterfoliage.blocks.leavesBlacklist.tooltip=잎으로 인식 되지 않습니다. 추가 잎, 떨어지는 잎에 영향을 주지 않습니다.
-betterfoliage.blocks.cropsWhitelist.tooltip=농작물로 인식됩니다. 농작물은 쉐이더 적용하면 큰잔디로 렌더링 됩니다. 
-betterfoliage.blocks.cropsBlacklist.tooltip=농작물로 인식 되지 않습니다. 농작물은 쉐이더 적용하면 큰잔디로 렌더링 되지 않습니다.
-betterfoliage.blocks.logsWhitelist.tooltip=나무로 인식됩니다. 둥근 나무에 영향을 줍니다.
-betterfoliage.blocks.logsBlacklist.tooltip=나무로 인식 되지 않습니다. 둥근 나무에 영향을 주지 않습니다.
-betterfoliage.blocks.sandWhitelist.tooltip=모래로 인식됩니다. 산호에 영향을 줍니다
-betterfoliage.blocks.sandBlacklist.tooltip=모래로 인식되지 않습니다. 산호에 영향을 주지 않습니다.
-betterfoliage.blocks.lilypadWhitelist.tooltip=연꽃으로 인식됩니다. 보다 나은 연꽃에 영향을 줍니다.
-betterfoliage.blocks.lilypadBlacklist.tooltip=연꽃으로 인식되지 않습니다. 보다 나은 연꽃에 영향을 주지 않습니다.
 betterfoliage.blocks.cactusWhitelist.tooltip=선인장으로 인식됩니다. 보다 나은 선인장에 영향을 줍니다.
 betterfoliage.blocks.cactusBlacklist.tooltip=선인장으로 인식되지 않습니다. 보다 나은 선인장에 영향을 주지 않습니다.
 
@@ -94,17 +67,10 @@ betterfoliage.shortGrass.useGenerated=잔디텍스쳐를 활성화 합니다.
 betterfoliage.shortGrass.useGenerated.tooltip=소스팩의 일부분에 활성화 되어있는 큰잔디 텍스쳐를 생성시킵니다.
 betterfoliage.shortGrass.myceliumEnabled=균사체 활성화
 betterfoliage.shortGrass.myceliumEnabled.tooltip=균사체 블록에 있는 기능을 활성화 시키겠습니까?
-betterfoliage.shortGrass.grassEnabled=잔디 활성화
-betterfoliage.shortGrass.grassEnabled.tooltip=잔디 블록에 있는 기능을 활성화 시키겠습니까?
 betterfoliage.shortGrass.snowEnabled=눈 활성화
 betterfoliage.shortGrass.snowEnabled.tooltip=잔디 블록위에 있는 눈을 활성화 시키겠습니까?
 betterfoliage.shortGrass.saturationThreshold=채도 임계값
 betterfoliage.shortGrass.saturationThreshold.tooltip=(특정 색상을 사용하여)"무채색"블록과 (바이옴 색을 사용하여)"화려한"블록 사이의 채도 차단
-
-betterfoliage.hangingGrass=매달려있는 잔디
-betterfoliage.hangingGrass.tooltip=잔디 블록 상단 가장자리에서 아래로 매달려 있는 잔디 다발
-betterfoliage.hangingGrass.separation=분리
-betterfoliage.hangingGrass.separation.tooltip=잔디블럭에 매달려있는 잔디의 양 
 
 betterfoliage.cactus=선인장
 betterfoliage.cactus.tooltip=선인장의 비트 수와 부드러운 그림자를 추가
@@ -120,13 +86,11 @@ betterfoliage.reed=갈대
 betterfoliage.reed.tooltip=물 속에서 흙블럭 위에 있는 갈대
 betterfoliage.reed.biomes=바이옴 리스트
 betterfoliage.reed.biomes.tooltip=갈대를 바이옴에 따라 표시
-betterfoliage.reed.biomes.tooltip.element=갈대를 %s 바이옴에 따라 나타내시겠습니까? 
 
 betterfoliage.algae=해조류
 betterfoliage.algae.tooltip=깊은 물 속 흙 블럭 위에 있는 해조류
 betterfoliage.algae.biomes=바이옴 리스트
 betterfoliage.algae.biomes.tooltip=해조류를 바이옴에 따라 표시
-betterfoliage.algae.biomes.tooltip.element=해조류를 %s 바이옴에 따라 나타내시겠습니까? 
 
 betterfoliage.coral=산호
 betterfoliage.coral.tooltip=깊은 물 속 모래 블럭 위에있는 산호
@@ -138,7 +102,6 @@ betterfoliage.coral.chance=산호 확률
 betterfoliage.coral.chance.tooltip=산호를 특정블록에 표시하는 확률(N 분의 64)
 betterfoliage.coral.biomes=바이옴 리스트
 betterfoliage.coral.biomes.tooltip=산호를 바이옴에 따라 표시
-betterfoliage.coral.biomes.tooltip.element=산호를 %s 바이옴에 따라 나타내시겠습니까?
 betterfoliage.coral.shallowWater=얕은 물 산호
 betterfoliage.coral.shallowWater.tooltip=산호를 깊은 물에 표시하시겠습니까?
 
@@ -191,26 +154,5 @@ betterfoliage.risingSoul.trailDensity.tooltip=파티클 자취를 모두 렌더�
 betterfoliage.connectedGrass=잔디 연결 텍스쳐
 betterfoliage.connectedGrass.enabled=활성화
 betterfoliage.connectedGrass.enabled.tooltip=잔디블록이 흙블록 위에 있을 경우 잔디블록 윗텍스쳐를 옆텍스쳐에 전부 씌웁니다.
-
-betterfoliage.roundLogs=둥근 나무
-betterfoliage.roundLogs.tooltip=둥근부분을 블럭과 연결.
-betterfoliage.roundLogs.connectSolids=블럭과 연결
-betterfoliage.roundLogs.connectSolids.tooltip=둥근부분을 블럭과 연결.
-betterfoliage.roundLogs.connectPerpendicular=나무 세로부분과 연결
-betterfoliage.roundLogs.connectPerpendicular.tooltip=나무 세로부분을 나무부분끼리 연결
-betterfoliage.roundLogs.lenientConnect=부드럽게 둥글게 연결
-betterfoliage.roundLogs.lenientConnect.tooltip=2x2사이즈처럼 나무 평형된 부분끼리 서로 연결합니다.
-betterfoliage.roundLogs.connectGrass=잔디 연결 텍스쳐
-betterfoliage.roundLogs.connectGrass.tooltip=잔디가 근처에 있을 경우 나무 아래 잔디 블록을 렌더링
-betterfoliage.roundLogs.radiusSmall=모서리 깎는 반지름
-betterfoliage.roundLogs.radiusSmall.tooltip=나무 모서리 깎는 정도
-betterfoliage.roundLogs.radiusLarge=모서리 깎는 부분 연결
-betterfoliage.roundLogs.radiusLarge.tooltip=나무 모서리 부분을 연결
-betterfoliage.roundLogs.dimming=조광
-betterfoliage.roundLogs.dimming.tooltip=나무 표면부분을 어둡게하는 양
-betterfoliage.roundLogs.zProtection=Z-Protection
-betterfoliage.roundLogs.zProtection.tooltip=Amount to scale parallel log connection bits to stop Z-fighting (flickering). Try to set it as high as possible without having glitches.
-betterfoliage.roundLogs.defaultY=수직선에대한 기본값
-betterfoliage.roundLogs.defaultY.tooltip=true 일경우, 나무 블럭이 수직선에대한 렌더링을 할수가 없습니다. 그렇지 아니하면, 네모난 블럭으로 렌더링 될것임니다.
 
 # Translate by IS_Jump for feedback mail acarus22@gmail.com
