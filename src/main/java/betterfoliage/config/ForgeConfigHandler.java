@@ -3,6 +3,7 @@ package betterfoliage.config;
 import betterfoliage.BetterFoliage;
 import betterfoliage.compat.OptifineCompatWrapper;
 import betterfoliage.mixin.BiomeDictionaryTypeAccessor;
+import fermiumbooter.annotations.MixinConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biome;
@@ -513,6 +514,7 @@ public class ForgeConfigHandler {
 		public boolean opacityHack = false;
 	}
 	
+	@MixinConfig(name = BetterFoliage.MODID)
 	public static class Global {
 		
 		@Config.Name("Enable Mod")
@@ -526,6 +528,15 @@ public class ForgeConfigHandler {
 		@Config.Name("Enable Forestry Compat")
 		@Config.LangKey("betterfoliage.global.forestry")
 		public boolean enableForestryCompat = true;
+		
+		@Config.Comment(
+				"Adds a patch for MC-114265 created by jonathan2520 at https://bugs-legacy.mojang.com/browse/MC-114265" + "\n" +
+				"Fixes improper mipmap generation causing transparent pixels to merge into black pixels, as well as increases performance" + "\n" +
+				"Created by and all credit goes to jonathan2520")
+		@Config.Name("Mipmap Generation Patch (MC-114265)")
+		@Config.RequiresMcRestart
+		@MixinConfig.MixinToggle(earlyMixin = "mixins.betterfoliage.mipmap.json", defaultValue = true)
+		public boolean mipmapGenPatch = true;
 	}
 	
 	public static class Leaves {
