@@ -29,10 +29,19 @@ public abstract class RenderChunkMixin {
 		ModelRenderer modelRenderer = ModelRenderer.MODEL_RENDERER.get();
 		modelRenderer.BLOCK_CONTEXT.set(blockAccess, pos, state);
 		
-		//Previous render check fixes proper cutout layers so specific check is not needed
-		boolean renderCutout = layer == BlockRenderLayer.CUTOUT || layer == BlockRenderLayer.CUTOUT_MIPPED;
-		//Render the base block if it normally renders non-cutout, or renders in either of the cutouts overriden by mip check
-		boolean renderPrimary = !renderCutout || state.getBlock().canRenderInLayer(state, BlockRenderLayer.CUTOUT) || state.getBlock().canRenderInLayer(state, BlockRenderLayer.CUTOUT_MIPPED);
+		boolean renderCutout;
+		boolean renderPrimary;
+		if(ForgeConfigHandler.GLOBAL.renderLayerAdjustments) {
+			//Previous render check fixes proper cutout layers so specific check is not needed
+			renderCutout = layer == BlockRenderLayer.CUTOUT || layer == BlockRenderLayer.CUTOUT_MIPPED;
+			//Render the base block if it normally renders non-cutout, or renders in either of the cutouts overriden by mip check
+			renderPrimary = !renderCutout || state.getBlock().canRenderInLayer(state, BlockRenderLayer.CUTOUT) || state.getBlock().canRenderInLayer(state, BlockRenderLayer.CUTOUT_MIPPED);
+		}
+		else {
+			renderPrimary = state.getBlock().canRenderInLayer(state, layer);
+			renderCutout = layer == BlockRenderLayer.CUTOUT;
+		}
+		
 		
 		for(RenderingHandler renderer : RenderingHandler.RENDERERS) {
 			if(renderer.isEligible(modelRenderer.BLOCK_CONTEXT, renderPrimary, renderCutout)) {

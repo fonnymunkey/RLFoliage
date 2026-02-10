@@ -537,6 +537,12 @@ public class ForgeConfigHandler {
 		@Config.RequiresMcRestart
 		@MixinConfig.MixinToggle(earlyMixin = "mixins.betterfoliage.mipmap.json", defaultValue = true)
 		public boolean mipmapGenPatch = true;
+		
+		@Config.Comment(
+				"Adjusts block layer rendering to render cutout textures using mipmaps if enabled (Better visually)" + "\n" +
+				"Can be disabled if other mods cause issues rendering cutout mipmaps, if disabled it will prefer non-mipmap cutout rendering")
+		@Config.Name("Render Layer Adjustments")
+		public boolean renderLayerAdjustments = true;
 	}
 	
 	public static class Leaves {

@@ -44,6 +44,11 @@ public abstract class RenderingHandler extends ResourceHandler {
 		//Dont modify non-cutout layers
 		if(!cutout) return block.canRenderInLayer(state, layer);
 		
+		if(!ForgeConfigHandler.GLOBAL.renderLayerAdjustments) {
+			if(layer == BlockRenderLayer.CUTOUT_MIPPED) return block.canRenderInLayer(state, BlockRenderLayer.CUTOUT_MIPPED);
+			return layer == BlockRenderLayer.CUTOUT;
+		}
+		
 		//Cutout pass, modify based on mipped
 		//Replicate normal Optifine handling that is disabled when BetterFoliage is installed
 		if(Minecraft.getMinecraft().gameSettings.mipmapLevels > 0) {
