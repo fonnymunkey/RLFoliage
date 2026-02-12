@@ -181,9 +181,9 @@ public class ForgeConfigHandler {
 		@Config.Name("Grass Models")
 		@Config.LangKey("betterfoliage.blocks.grassModels")
 		public String[] grassModels = new String[] {
-				"block/grass,top",
-				"block/cube_bottom_top,top",
-				"block/soil/grass_master,top"
+				"block/grass,top,bottom",
+				"block/cube_bottom_top,top,bottom",
+				"block/soil/grass_master,top,bottom"
 		};
 		
 		@Config.Name("Mycelium Classes Whitelist")

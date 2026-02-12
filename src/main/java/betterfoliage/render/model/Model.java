@@ -2,7 +2,6 @@ package betterfoliage.render.model;
 
 import betterfoliage.render.math.Double3;
 import betterfoliage.render.util.MathUtil;
-import betterfoliage.render.util.ShaderUtil;
 import net.minecraft.util.EnumFacing;
 
 import java.util.ArrayList;
@@ -10,20 +9,6 @@ import java.util.List;
 import java.util.function.UnaryOperator;
 
 public class Model {
-	public static final Model FULLCUBE = new Model();
-	public static final Model FULLCUBE_OVERLAY = new Model();
-	
-	static {
-		for(EnumFacing face : MathUtil.FORGEDIRS) {
-			FULLCUBE.add(faceQuad(face)
-								 .setAoShader(ShaderUtil.faceOrientedAuto(null, ShaderUtil.cornerAo(face.getAxis())))
-								 .setFlatShader(ShaderUtil.faceOrientedAuto(null, ShaderUtil.CORNER_FLAT)));
-			FULLCUBE_OVERLAY.add(faceQuadOverlay(face)
-								 .setAoShader(ShaderUtil.faceOrientedAuto(null, ShaderUtil.cornerAo(face.getAxis())))
-								 .setFlatShader(ShaderUtil.faceOrientedAuto(null, ShaderUtil.CORNER_FLAT)));
-		}
-	}
-	
 	public final List<Quad> quads = new ArrayList<>();
 	
 	public Model() { }

@@ -83,15 +83,15 @@ public class RenderVertex {
 	}
 	
 	public void multiplyColor(int color) {
-		this.red *= (float)(color >> 16 & 255) / 256.0F;
-		this.green *= (float)(color >> 8 & 255) / 256.0F;
-		this.blue *= (float)(color & 255) / 256.0F;
+		this.red *= (float)(color >> 16 & 255) / 255.0F;
+		this.green *= (float)(color >> 8 & 255) / 255.0F;
+		this.blue *= (float)(color & 255) / 255.0F;
 	}
 	
 	public void setColor(int color) {
-		this.red = (float)(color >> 16 & 255) / 256.0F;
-		this.green = (float)(color >> 8 & 255) / 256.0F;
-		this.blue = (float)(color & 255) / 256.0F;
+		this.red = (float)(color >> 16 & 255) / 255.0F;
+		this.green = (float)(color >> 8 & 255) / 255.0F;
+		this.blue = (float)(color & 255) / 255.0F;
 	}
 	
 	public void shade(AoData shading) {

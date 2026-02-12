@@ -168,22 +168,20 @@ public abstract class RenderUtil {
 		return new ResourceLocation(loc.getNamespace(), "textures/" + loc.getPath());
 	}
 	
-	public static int brMul(int i, float f) {
-		int weight = (int)(f * 256.0F);
+	public static int brMul(int i, float weight) {
 		int result = 0;
 		for(int shift : BRIGHTNESS_COMPONENTS) {
 			int raw = (i >> shift) & 15;
-			int weighted = raw * weight / 256;
+			int weighted = (int)(weight * (float)raw);
 			result |= weighted << shift;
 		}
 		return result;
 	}
 	
-	public static int colorMult(int i, float f) {
-		int weight = (int)(f * 256.0F);
-		int red = (i >> 16 & 255) * weight / 256;
-		int green = (i >> 8 & 255) * weight / 256;
-		int blue = (i & 255) * weight / 256;
+	public static int colorMult(int i, float weight) {
+		int red = (int)(weight * (float)(i >> 16 & 255));
+		int green = (int)(weight * (float)(i >> 8 & 255));
+		int blue = (int)(weight * (float)(i & 255));
 		return (red << 16) | (green << 8) | blue;
 	}
 	
@@ -205,14 +203,12 @@ public abstract class RenderUtil {
 		return result;
 	}
 	
-	public static int brWeighted(int br1, float weight1, int br2, float weight2) {
-		int w1 = (int)(weight1 * 256.0F + 0.5F);
-		int w2 = (int)(weight2 * 256.0F + 0.5F);
+	public static int brWeighted(int br1, float w1, int br2, float w2) {
 		int result = 0;
 		for(int shift : BRIGHTNESS_COMPONENTS) {
 			int comp1 = (br1 >> shift)&15;
 			int comp2 = (br2 >> shift)&15;
-			int compWeighted = (comp1 * w1 + comp2 * w2) / 256;
+			int compWeighted = (int)((float)comp1 * w1 + (float)comp2 * w2);
 			result |= (compWeighted&15) << shift;
 		}
 		return result;

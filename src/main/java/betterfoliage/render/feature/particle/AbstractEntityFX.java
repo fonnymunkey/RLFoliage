@@ -123,8 +123,8 @@ public abstract class AbstractEntityFX extends Particle {
 	}
 	
 	public void setColor(int color) {
-		this.particleRed = (float)((color >> 16) & 255) / 256.0F;
-		this.particleGreen = (float)((color >> 8) & 255) / 256.0F;
-		this.particleBlue = (float)(color & 255) / 256.0F;
+		this.particleRed = (float)((color >> 16) & 255) / 255.0F;
+		this.particleGreen = (float)((color >> 8) & 255) / 255.0F;
+		this.particleBlue = (float)(color & 255) / 255.0F;
 	}
 }

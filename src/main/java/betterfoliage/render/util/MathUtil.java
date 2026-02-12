@@ -77,17 +77,6 @@ public abstract class MathUtil {
 		return EnumFacing.NORTH;
 	}
 	
-	public static float aoMultiplier(EnumFacing facing) {
-		switch(facing) {
-			case UP : return 1.0F;
-			case DOWN : return 0.5F;
-			case NORTH :
-			case SOUTH :
-				return 0.8F;
-			default : return 0.6F;
-		}
-	}
-	
 	public static Int3 offset(EnumFacing facing) {
 		return FORGEDIRS_OFFSETS[facing.ordinal()];
 	}

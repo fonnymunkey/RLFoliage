@@ -40,6 +40,7 @@ public abstract class ShaderUtil {
 	
 	public static final Shader NO_SHADER = new NoShader();
 	public static final CornerShaderFactory CORNER_FLAT = (face, dir1, dir2) -> new FaceFlat(face);
+	public static final CornerShaderFactory CORNER_FLAT_DIFFUSE = (face, dir1, dir2) -> new FaceFlatDiffuse(face);
 	public static final CornerShaderFactory CORNER_AO_MAX_GREEN = cornerAoTri((s1, s2) -> s1.green > s2.green ? s1 : s2);
 	public static final QuadFilter FILTER_TRUE = (a, b) -> true;
 	public static final PostProcessLambda NO_POST = (a,b,c,d,e,f) -> {};

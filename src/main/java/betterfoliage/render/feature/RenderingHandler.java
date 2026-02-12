@@ -41,12 +41,13 @@ public abstract class RenderingHandler extends ResourceHandler {
 		if(!ForgeConfigHandler.GLOBAL.enabled) return block.canRenderInLayer(state, layer);
 		
 		boolean cutout = layer == BlockRenderLayer.CUTOUT || layer == BlockRenderLayer.CUTOUT_MIPPED;
-		//Dont modify non-cutout layers
 		if(!cutout) return block.canRenderInLayer(state, layer);
 		
 		if(!ForgeConfigHandler.GLOBAL.renderLayerAdjustments) {
+			//Only pass mipped if its primary layer
 			if(layer == BlockRenderLayer.CUTOUT_MIPPED) return block.canRenderInLayer(state, BlockRenderLayer.CUTOUT_MIPPED);
-			return layer == BlockRenderLayer.CUTOUT;
+			//Always pass unmipped for additional render
+			return true;
 		}
 		
 		//Cutout pass, modify based on mipped

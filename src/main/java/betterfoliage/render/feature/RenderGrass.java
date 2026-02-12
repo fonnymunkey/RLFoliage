@@ -28,6 +28,8 @@ import java.util.function.BiConsumer;
 public class RenderGrass extends RenderingHandler {
 	public static final RenderGrass RENDER_GRASS = new RenderGrass();
 	
+	private static final int[] uvRot = new int[] { 2, 2, 3, 0, 3, 1 };
+	
 	public static BiConsumer<Model,Integer> grassTopQuads(double heightMin, double heightMax) {
 		return (model, i) -> model.addAll(
 				Model.verticalRectangle(-0.5, 0.5, 0.5, -0.5, 0.5, 0.5 + MathUtil.random(heightMin, heightMax))
@@ -35,6 +37,14 @@ public class RenderGrass extends RenderingHandler {
 					 .setFlatShader(new FlatOffset(new Int3(0, 1, 0)))
 					 .toCross(EnumFacing.UP, q -> q.move(MathUtil.xzDisk(i).mul(ForgeConfigHandler.SHORTGRASS.hOffset))));
 	}
+	
+	public final ModelHolder FULL_CUBE = getModelHolder(model -> {
+		for(EnumFacing face : MathUtil.FORGEDIRS) {
+			model.add(Model.faceQuad(face)
+								 .setAoShader(ShaderUtil.faceOrientedAuto(null, ShaderUtil.cornerAo(face.getAxis())))
+								 .setFlatShader(ShaderUtil.faceOrientedAuto(null, ShaderUtil.CORNER_FLAT_DIFFUSE)));
+		}
+	});
 	
 	private final SimplexNoise noise = getSimplexNoise();
 	private final IconSet normalLongIcons = getIconSet(BetterFoliage.MODID, "blocks/better_grass_long_%d");
@@ -91,15 +101,17 @@ public class RenderGrass extends RenderingHandler {
 				for(int i = 0; i < MathUtil.FORGEDIRS.length; i++) {
 					isHidden[i] = ctx.getState(MathUtil.offset(MathUtil.FORGEDIRS[i])).isOpaqueCube();
 				}
+				int[] rand = ctx.getSemiRandomArray(1);
 				OptifineCompatWrapper.renderAs(ctx.getState(), EnumBlockRenderType.MODEL, renderer, true, () -> modelRenderer.render(
 						renderer,
-						Model.FULLCUBE,
+						FULL_CUBE.model,
 						MathUtil.IDENTITY,
 						ctx.getCenter(),
 						false,
 						(i,q) -> !isHidden[i],
 						(m, i, q) -> isSnowed ? snowFullIcon.icon : grassInfo.grassTopTexture,
 						(rv, m, i, q, i2, v) -> {
+							rv.rotateUV(i == 0 || i == 1 ? rand[0] : uvRot[i]);
 							if(!isSnowed) {
 								if(m.aoEnabled && grassInfo.overrideColor == null) {
 									rv.multiplyColor(blockColor);
@@ -107,7 +119,8 @@ public class RenderGrass extends RenderingHandler {
 							}
 							else {
 								if(!m.aoEnabled) {
-									rv.setGrey(2.0F);
+									//Redo diffuse color/shading as it was previously set with grass colors rather than snow
+									rv.setColor(RenderUtil.colorMult(16777215, OptifineCompatWrapper.getDiffusedMult(MathUtil.FORGEDIRS[i])));
 								}
 							}
 						}));

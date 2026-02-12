@@ -18,6 +18,7 @@ import net.optifine.CustomColors;
 import net.optifine.override.ChunkCacheOF;
 import net.optifine.render.RenderEnv;
 import net.optifine.shaders.SVertexBuilder;
+import net.optifine.shaders.Shaders;
 import org.apache.logging.log4j.Level;
 
 public abstract class OptifineHandler {
@@ -53,5 +54,25 @@ public abstract class OptifineHandler {
 		if(access instanceof ChunkCache) return ((ChunkCache)access).world.isBlockLoaded(pos, false);
 		if(access instanceof ChunkCacheOF) return ((ChunkCacheOFAccessor)access).getChunkCache().world.isBlockLoaded(pos, false);
 		return false;
+	}
+	
+	public static float getDiffusedMult(EnumFacing face) {
+		if(!Shaders.isOldLighting()) return 1.0F;
+		switch(face) {
+			case DOWN: {
+				if(Shaders.shaderPackLoaded) return Shaders.blockLightLevel05;
+				return 0.5F;
+			}
+			case UP: return 1.0F;
+			case NORTH:
+			case SOUTH: {
+				if(Shaders.shaderPackLoaded) return Shaders.blockLightLevel08;
+				return 0.8F;
+			}
+			default: {
+				if(Shaders.shaderPackLoaded) return Shaders.blockLightLevel06;
+				return 0.6F;
+			}
+		}
 	}
 }

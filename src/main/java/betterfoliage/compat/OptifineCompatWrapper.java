@@ -11,6 +11,7 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumBlockRenderType;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.ChunkCache;
 import net.minecraft.world.IBlockAccess;
@@ -84,5 +85,18 @@ public abstract class OptifineCompatWrapper {
 			return false;
 		}
 		else return OptifineHandler.isBlockLoadedSafe(access, pos);
+	}
+	
+	public static float getDiffusedMult(EnumFacing face) {
+		if(!isOptifineLoaded()) {
+			switch(face) {
+				case DOWN: return 0.5F;
+				case UP: return 1.0F;
+				case NORTH:
+				case SOUTH: return 0.8F;
+				default: return 0.6F;
+			}
+		}
+		else return OptifineHandler.getDiffusedMult(face);
 	}
 }

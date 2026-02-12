@@ -68,7 +68,7 @@ public class ModelRenderer {
 	public void updateShading(Int3 offset, Function<EnumFacing,Boolean> predicate) {
 		for(EnumFacing facing : MathUtil.FORGEDIRS) {
 			if(predicate.apply(facing)) {
-				this.aoFaces[facing.ordinal()].update(offset, MathUtil.aoMultiplier(facing));
+				this.aoFaces[facing.ordinal()].update(offset, OptifineCompatWrapper.getDiffusedMult(facing));
 			}
 		}
 	}

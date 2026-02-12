@@ -46,7 +46,7 @@ public class GrassRegistry extends ModelRenderRegistryRoot<GrassRegistry.GrassIn
 		@Nullable
 		@Override
 		public ModelRenderKey<GrassInfo> processModel(IBlockState state, List<String> textures) {
-			return new StandardGrassKey(this.logger, textures.get(0));
+			return new StandardGrassKey(this.logger, textures.get(0), textures.get(1));
 		}
 	}
 	
@@ -54,31 +54,38 @@ public class GrassRegistry extends ModelRenderRegistryRoot<GrassRegistry.GrassIn
 		private static final String logName = "StandardGrassKey";
 		private static final int defaultGrassColor = 0;
 		private final Logger logger;
-		private final String textureName;
-		private ResourceLocation generatedShort = null;
-		private ResourceLocation generatedLong = null;
+		private final String textureTop;
+		private final String textureBottom;
+		private ResourceLocation generatedShortOverlay = null;
+		private ResourceLocation generatedLongOverlay = null;
 		
-		private StandardGrassKey(Logger logger, String textureName) {
+		private StandardGrassKey(Logger logger, String textureTop, String textureBottom) {
 			this.logger = logger;
-			this.textureName = textureName;
+			this.textureTop = textureTop;
+			this.textureBottom = textureBottom;
 		}
 		
 		@Override
 		public void onPreStitch(TextureMap atlas) {
-			this.generatedShort = ConnectedGrassGenerator.CONNECTED_GRASS_GENERATOR.generatedResource(this.textureName, new Pair<>("long", false));
-			atlas.registerSprite(this.generatedShort);
-			this.generatedLong = ConnectedGrassGenerator.CONNECTED_GRASS_GENERATOR.generatedResource(this.textureName, new Pair<>("long", true));
-			atlas.registerSprite(this.generatedLong);
+			this.generatedShortOverlay = ConnectedGrassGenerator.CONNECTED_GRASS_GENERATOR.generatedResource(this.textureTop, new Pair<>("long", false));
+			atlas.registerSprite(this.generatedShortOverlay);
+			this.generatedLongOverlay = ConnectedGrassGenerator.CONNECTED_GRASS_GENERATOR.generatedResource(this.textureTop, new Pair<>("long", true));
+			atlas.registerSprite(this.generatedLongOverlay);
 			
-			this.logger.log(Level.DEBUG, "{}: grass texture {}", logName, this.textureName);
+			this.logger.log(Level.DEBUG, "{}: grass texture top {}", logName, this.textureTop);
+			this.logger.log(Level.DEBUG, "{}:               bottom {}", logName, this.textureBottom);
 		}
 		
 		@Override
 		public GrassInfo resolveSprites(TextureMap atlas) {
-			String topTextureName = this.textureName;
+			String topTextureName = this.textureTop;
 			TextureAtlasSprite topTexture = atlas.getTextureExtry(new ResourceLocation(topTextureName).toString());
 			if(topTexture == null) topTexture = atlas.getMissingSprite();
 			this.logger.log(Level.DEBUG, "{}: texture top {}", logName, topTextureName);
+			String bottomTextureName = this.textureBottom;
+			TextureAtlasSprite bottomTexture = atlas.getTextureExtry(new ResourceLocation(bottomTextureName).toString());
+			if(bottomTexture == null) bottomTexture = atlas.getMissingSprite();
+			this.logger.log(Level.DEBUG, "{}: texture bottom {}", logName, bottomTextureName);
 			
 			Integer avgColor = RenderUtil.averageColor(topTexture);
 			if(avgColor == null) avgColor = defaultGrassColor;
@@ -95,28 +102,31 @@ public class GrassRegistry extends ModelRenderRegistryRoot<GrassRegistry.GrassIn
 				overrideColor = null;
 			}
 			
-			TextureAtlasSprite spriteShort = atlas.getTextureExtry(this.generatedShort.toString());
-			if(spriteShort == null) spriteShort = atlas.getMissingSprite();
-			TextureAtlasSprite spriteLong = atlas.getTextureExtry(this.generatedLong.toString());
-			if(spriteLong == null) spriteLong = atlas.getMissingSprite();
+			TextureAtlasSprite spriteShortOverlay = atlas.getTextureExtry(this.generatedShortOverlay.toString());
+			if(spriteShortOverlay == null) spriteShortOverlay = atlas.getMissingSprite();
+			TextureAtlasSprite spriteLongOverlay = atlas.getTextureExtry(this.generatedLongOverlay.toString());
+			if(spriteLongOverlay == null) spriteLongOverlay = atlas.getMissingSprite();
 			
-			return new GrassInfo(topTexture, spriteShort, spriteLong, overrideColor);
+			return new GrassInfo(topTexture, bottomTexture, spriteShortOverlay, spriteLongOverlay, overrideColor);
 		}
 	}
 	
 	public static class GrassInfo {
 		public final TextureAtlasSprite grassTopTexture;
-		public final TextureAtlasSprite sideShortTexture;
-		public final TextureAtlasSprite sideLongTexture;
+		public final TextureAtlasSprite grassBottomTexture;
+		public final TextureAtlasSprite sideShortOverlayTexture;
+		public final TextureAtlasSprite sideLongOverlayTexture;
 		public final Integer overrideColor;
 		
 		private GrassInfo(TextureAtlasSprite grassTopTexture,
-						  TextureAtlasSprite sideShortTexture,
-						  TextureAtlasSprite sideLongTexture,
+						  TextureAtlasSprite grassBottomTexture,
+						  TextureAtlasSprite sideShortOverlayTexture,
+						  TextureAtlasSprite sideLongOverlayTexture,
 						  @Nullable Integer overrideColor) {
 			this.grassTopTexture = grassTopTexture;
-			this.sideShortTexture = sideShortTexture;
-			this.sideLongTexture = sideLongTexture;
+			this.grassBottomTexture = grassBottomTexture;
+			this.sideShortOverlayTexture = sideShortOverlayTexture;
+			this.sideLongOverlayTexture = sideLongOverlayTexture;
 			this.overrideColor = overrideColor;
 		}
 	}
