@@ -4,10 +4,8 @@ import betterfoliage.BetterFoliage;
 import betterfoliage.config.ForgeConfigHandler;
 import betterfoliage.render.BlockContext;
 import betterfoliage.render.ModelRenderer;
-import betterfoliage.render.math.Int3;
 import betterfoliage.render.model.Model;
 import betterfoliage.render.util.MathUtil;
-import betterfoliage.render.util.RenderUtil;
 import betterfoliage.render.util.ShaderUtil;
 import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -41,8 +39,8 @@ public class RenderNetherrack extends RenderingHandler {
 		return ForgeConfigHandler.NETHERRACK.enabled &&
 				renderCutout &&
 				ForgeConfigHandler.NETHERRACK.population > 0 &&
-				(ForgeConfigHandler.NETHERRACK.population >= 64 || ForgeConfigHandler.NETHERRACK.population > this.noise.get(ctx.getPos())) &&
-				ForgeConfigHandler.BLOCKS.netherrackClassesMatcher.matchesClass(ctx.getBlock());
+				ForgeConfigHandler.BLOCKS.netherrackClassesMatcher.matchesClass(ctx.getBlock()) &&
+				(ForgeConfigHandler.NETHERRACK.population >= 64 || ForgeConfigHandler.NETHERRACK.population > this.noise.get(ctx.getPos()));
 	}
 	
 	@Override
@@ -54,7 +52,7 @@ public class RenderNetherrack extends RenderingHandler {
 		if(ctx.getState(0, -1, 0).isOpaqueCube()) return rendered;
 		
 		ModelRenderer modelRenderer = ModelRenderer.MODEL_RENDERER.get();
-		modelRenderer.updateShading(Int3.ZERO, RenderUtil.BOTTOM_ONLY);
+		modelRenderer.updateShading(EnumFacing.DOWN);
 		
 		int[] rand = ctx.getSemiRandomArray(2);
 		modelRenderer.render(

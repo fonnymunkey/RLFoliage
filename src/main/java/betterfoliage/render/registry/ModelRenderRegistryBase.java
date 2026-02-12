@@ -42,6 +42,7 @@ public abstract class ModelRenderRegistryBase<T> implements ModelRenderRegistry<
 	@Nullable
 	@Override
 	public T get(IBlockState state, IBlockAccess world, BlockPos pos) {
+		if(state == null || !this.matchClasses().matchesClass(state.getBlock())) return null;
 		return this.stateToValue.get(state);
 	}
 	

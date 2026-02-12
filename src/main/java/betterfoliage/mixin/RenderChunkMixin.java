@@ -42,7 +42,6 @@ public abstract class RenderChunkMixin {
 			renderCutout = layer == BlockRenderLayer.CUTOUT;
 		}
 		
-		
 		for(RenderingHandler renderer : RenderingHandler.RENDERERS) {
 			if(renderer.isEligible(modelRenderer.BLOCK_CONTEXT, renderPrimary, renderCutout)) {
 				return renderer.render(modelRenderer.BLOCK_CONTEXT, dispatcher, worldRenderer, layer, renderPrimary, renderCutout);

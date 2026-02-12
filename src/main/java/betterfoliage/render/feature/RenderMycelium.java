@@ -5,14 +5,15 @@ import betterfoliage.compat.OptifineCompatWrapper;
 import betterfoliage.config.ForgeConfigHandler;
 import betterfoliage.render.BlockContext;
 import betterfoliage.render.ModelRenderer;
-import betterfoliage.render.math.Int3;
 import betterfoliage.render.util.MathUtil;
 import betterfoliage.render.util.RenderUtil;
 import betterfoliage.render.util.ShaderUtil;
+import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.util.EnumFacing;
 import org.apache.logging.log4j.Level;
 
 public class RenderMycelium extends RenderingHandler {
@@ -39,8 +40,8 @@ public class RenderMycelium extends RenderingHandler {
 		return ForgeConfigHandler.SHORTGRASS.myceliumEnabled &&
 				renderCutout &&
 				ForgeConfigHandler.SHORTGRASS.myceliumPopulation > 0 &&
-				(ForgeConfigHandler.SHORTGRASS.myceliumPopulation >= 64 || ForgeConfigHandler.SHORTGRASS.myceliumPopulation > this.noise.get(ctx.getPos())) &&
-				ForgeConfigHandler.BLOCKS.myceliumClassesMatcher.matchesClass(ctx.getBlock());
+				ForgeConfigHandler.BLOCKS.myceliumClassesMatcher.matchesClass(ctx.getBlock()) &&
+				(ForgeConfigHandler.SHORTGRASS.myceliumPopulation >= 64 || ForgeConfigHandler.SHORTGRASS.myceliumPopulation > this.noise.get(ctx.getPos()));
 	}
 	
 	@Override
@@ -51,15 +52,17 @@ public class RenderMycelium extends RenderingHandler {
 		
 		IBlockState up = ctx.getState(0, 1, 0);
 		boolean isSnowed = RenderUtil.isSnow(up.getMaterial());
-		if(isSnowed && !ForgeConfigHandler.SHORTGRASS.snowEnabled) return rendered;
-		if(up.isOpaqueCube()) return rendered;
+		if(isSnowed) {
+			if(!ForgeConfigHandler.SHORTGRASS.snowEnabled) return rendered;
+			else if(up.getMaterial() == Material.CRAFTED_SNOW) return rendered;
+		}
+		else if(up.getMaterial() != Material.AIR) return rendered;
 		
 		ModelRenderer modelRenderer = ModelRenderer.MODEL_RENDERER.get();
-		modelRenderer.updateShading(Int3.ZERO, RenderUtil.TOP_ONLY);
+		modelRenderer.updateShading(EnumFacing.UP);
 		
 		IconSet iconSet = isSnowed ? this.mycelSnowIcons : this.mycelNormalIcons;
 		int[] rand = ctx.getSemiRandomArray(2);
-		
 		OptifineCompatWrapper.grass(renderer, ForgeConfigHandler.SHORTGRASS.shaderWind, () -> modelRenderer.render(
 				renderer,
 				mycelModels.get(rand[0]),

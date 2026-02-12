@@ -4,17 +4,15 @@ import betterfoliage.BetterFoliage;
 import betterfoliage.config.ForgeConfigHandler;
 import betterfoliage.render.BlockContext;
 import betterfoliage.render.ModelRenderer;
-import betterfoliage.render.math.Double3;
-import betterfoliage.render.math.Int3;
 import betterfoliage.render.model.Model;
 import betterfoliage.render.util.MathUtil;
-import betterfoliage.render.util.RenderUtil;
 import betterfoliage.render.util.ShaderUtil;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import org.apache.logging.log4j.Level;
 
 public class RenderCoral extends RenderingHandler {
@@ -55,11 +53,11 @@ public class RenderCoral extends RenderingHandler {
 		return ForgeConfigHandler.CORAL.enabled &&
 				renderCutout &&
 				ForgeConfigHandler.CORAL.population > 0 &&
-				(ForgeConfigHandler.CORAL.population >= 64 || (ForgeConfigHandler.CORAL.population > this.noise.get(ctx.getPos()))) &&
+				ForgeConfigHandler.BLOCKS.sandClassesMatcher.matchesClass(ctx.getBlock()) &&
+				ForgeConfigHandler.CORAL.isBiomeValid(ctx.getBiomeId()) &&
 				ctx.getState(0, 1, 0).getMaterial() == Material.WATER &&
 				(ForgeConfigHandler.CORAL.shallowWater || ctx.getState(0, 2, 0).getMaterial() == Material.WATER) &&
-				ForgeConfigHandler.BLOCKS.sandClassesMatcher.matchesClass(ctx.getBlock()) &&
-				ForgeConfigHandler.CORAL.isBiomeValid(ctx.getBiomeId());
+				(ForgeConfigHandler.CORAL.population >= 64 || (ForgeConfigHandler.CORAL.population > this.noise.get(ctx.getPos())));
 	}
 	
 	@Override
@@ -68,25 +66,37 @@ public class RenderCoral extends RenderingHandler {
 		if(renderPrimary) rendered = renderWorldBlockBase(ctx, dispatcher, renderer, layer);
 		if(!renderCutout) return rendered;
 		
+		boolean[] side = new boolean[6];
+		boolean doRender = false;
+		BlockPos.MutableBlockPos offsetPos = new BlockPos.MutableBlockPos();
+		for(int i = 0; i < MathUtil.FORGEDIRS.length; i++) {
+			EnumFacing face = MathUtil.FORGEDIRS[i];
+			if(face == EnumFacing.DOWN) side[i] = false;
+			else if(ctx.getRandom(i) < ForgeConfigHandler.CORAL.chance) {
+				offsetPos.setPos(ctx.getPos()).move(face);
+				side[i] = !ctx.getWorld().getBlockState(offsetPos).isOpaqueCube();
+				doRender |= side[i];
+			}
+			else side[i] = false;
+		}
+		if(!doRender) return false;
+		
 		ModelRenderer modelRenderer = ModelRenderer.MODEL_RENDERER.get();
-		modelRenderer.updateShading(Int3.ZERO, RenderUtil.ALL_FACES);
+		modelRenderer.updateShading(side);
 		
 		for(int i = 0; i < MathUtil.FORGEDIRS.length; i++) {
-			if(ctx.getRandom(i) < ForgeConfigHandler.CORAL.chance) {
-				if(!ctx.getState(MathUtil.FORGEDIRS_OFFSETS[i]).isOpaqueCube()) {
-					int variation = ctx.getRandom(6);
-					
-					modelRenderer.render(
-							renderer,
-							coralModels.get(variation),
-							MathUtil.ROTATION_FROM_UP[i],
-							ctx.getCenter(),
-							false,
-							ShaderUtil.FILTER_TRUE,
-							(m, i2, q) -> i2 == 4 ? crustIcons.get(variation + 1) : coralIcons.get(variation + 1 + (i2 & 1)),
-							ShaderUtil.NO_POST);
-					rendered = true;
-				}
+			if(side[i]) {
+				int variation = ctx.getRandom(6);
+				modelRenderer.render(
+						renderer,
+						coralModels.get(variation),
+						MathUtil.ROTATION_FROM_UP[i],
+						ctx.getCenter(),
+						false,
+						ShaderUtil.FILTER_TRUE,
+						(m, i2, q) -> i2 == 4 ? crustIcons.get(variation + 1) : coralIcons.get(variation + 1 + (i2 & 1)),
+						ShaderUtil.NO_POST);
+				rendered = true;
 			}
 		}
 		return rendered;

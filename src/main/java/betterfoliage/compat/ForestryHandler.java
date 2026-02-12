@@ -10,6 +10,8 @@ import betterfoliage.render.registry.ModelRenderRegistry;
 import forestry.api.arboriculture.EnumLeafType;
 import forestry.api.arboriculture.IAlleleTreeSpecies;
 import forestry.api.arboriculture.ILeafSpriteProvider;
+import forestry.arboriculture.blocks.BlockAbstractLeaves;
+import forestry.arboriculture.blocks.BlockDecorativeLeaves;
 import forestry.arboriculture.blocks.PropertyTreeType;
 import forestry.arboriculture.genetics.TreeDefinition;
 import forestry.arboriculture.models.TextureLeaves;
@@ -51,6 +53,7 @@ public abstract class ForestryHandler {
 		
 		@Override
 		public LeafRegistry.LeafInfo get(IBlockState state, IBlockAccess world, BlockPos pos) {
+			if(!(state.getBlock() instanceof BlockAbstractLeaves || state.getBlock() instanceof BlockDecorativeLeaves)) return null;
 			for(Map.Entry<IProperty<?>, Comparable<?>> entry : state.getProperties().entrySet()) {
 				if(entry.getKey() instanceof PropertyTreeType && entry.getValue() instanceof TreeDefinition) {
 					TreeDefinition treeDef = (TreeDefinition)entry.getValue();

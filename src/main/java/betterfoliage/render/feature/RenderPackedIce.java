@@ -4,10 +4,8 @@ import betterfoliage.BetterFoliage;
 import betterfoliage.config.ForgeConfigHandler;
 import betterfoliage.render.BlockContext;
 import betterfoliage.render.ModelRenderer;
-import betterfoliage.render.math.Int3;
 import betterfoliage.render.model.Model;
 import betterfoliage.render.util.MathUtil;
-import betterfoliage.render.util.RenderUtil;
 import betterfoliage.render.util.ShaderUtil;
 import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -41,8 +39,8 @@ public class RenderPackedIce extends RenderingHandler {
 		return ForgeConfigHandler.PACKEDICE.enabled &&
 				renderCutout &&
 				ForgeConfigHandler.PACKEDICE.population > 0 &&
-				(ForgeConfigHandler.PACKEDICE.population >= 64 || ForgeConfigHandler.PACKEDICE.population > this.noise.get(ctx.getPos())) &&
-				ForgeConfigHandler.BLOCKS.packediceClassesMatcher.matchesClass(ctx.getBlock());
+				ForgeConfigHandler.BLOCKS.packediceClassesMatcher.matchesClass(ctx.getBlock()) &&
+				(ForgeConfigHandler.PACKEDICE.population >= 64 || ForgeConfigHandler.PACKEDICE.population > this.noise.get(ctx.getPos()));
 	}
 	
 	@Override
@@ -54,7 +52,7 @@ public class RenderPackedIce extends RenderingHandler {
 		if(ctx.getState(0, -1, 0).isOpaqueCube()) return rendered;
 		
 		ModelRenderer modelRenderer = ModelRenderer.MODEL_RENDERER.get();
-		modelRenderer.updateShading(Int3.ZERO, RenderUtil.BOTTOM_ONLY);
+		modelRenderer.updateShading(EnumFacing.DOWN);
 		
 		int[] rand = ctx.getSemiRandomArray(2);
 		modelRenderer.render(

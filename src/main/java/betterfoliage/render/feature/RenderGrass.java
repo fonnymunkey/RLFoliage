@@ -21,6 +21,7 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import org.apache.logging.log4j.Level;
 
 import java.util.function.BiConsumer;
@@ -87,6 +88,7 @@ public class RenderGrass extends RenderingHandler {
 		ModelRenderer modelRenderer = ModelRenderer.MODEL_RENDERER.get();
 		IBlockState up = ctx.getState(0, 1, 0);
 		boolean isSnowed = RenderUtil.isSnow(up.getMaterial());
+		boolean topShaded = false;
 		
 		if(renderPrimary) {
 			boolean connectedGrass = ForgeConfigHandler.CONNECTEDGRASS.enabled && (!isSnowed || ForgeConfigHandler.CONNECTEDGRASS.snowEnabled);
@@ -96,53 +98,71 @@ public class RenderGrass extends RenderingHandler {
 			}
 			
 			if(connectedGrass) {
-				modelRenderer.updateShading(Int3.ZERO, RenderUtil.ALL_FACES);
-				boolean[] isHidden  = new boolean[6];
+				boolean[] side = new boolean[6];
+				boolean doRender = false;
+				BlockPos.MutableBlockPos offsetPos = new BlockPos.MutableBlockPos();
 				for(int i = 0; i < MathUtil.FORGEDIRS.length; i++) {
-					isHidden[i] = ctx.getState(MathUtil.offset(MathUtil.FORGEDIRS[i])).isOpaqueCube();
+					EnumFacing face = MathUtil.FORGEDIRS[i];
+					if(face == EnumFacing.DOWN) side[i] = false;
+					else {
+						offsetPos.setPos(ctx.getPos()).move(face);
+						side[i] = !ctx.getWorld().getBlockState(offsetPos).isOpaqueCube();
+						doRender |= side[i];
+						if(face == EnumFacing.UP) topShaded = side[i];
+					}
 				}
-				int[] rand = ctx.getSemiRandomArray(1);
-				OptifineCompatWrapper.renderAs(ctx.getState(), EnumBlockRenderType.MODEL, renderer, true, () -> modelRenderer.render(
-						renderer,
-						FULL_CUBE.model,
-						MathUtil.IDENTITY,
-						ctx.getCenter(),
-						false,
-						(i,q) -> !isHidden[i],
-						(m, i, q) -> isSnowed ? snowFullIcon.icon : grassInfo.grassTopTexture,
-						(rv, m, i, q, i2, v) -> {
-							rv.rotateUV(i == 0 || i == 1 ? rand[0] : uvRot[i]);
-							if(!isSnowed) {
-								if(m.aoEnabled && grassInfo.overrideColor == null) {
-									rv.multiplyColor(blockColor);
+				
+				if(doRender) {
+					modelRenderer.updateShading(side);
+					int[] rand = ctx.getSemiRandomArray(1);
+					OptifineCompatWrapper.renderAs(ctx.getState(), EnumBlockRenderType.MODEL, renderer, true, () -> modelRenderer.render(
+							renderer,
+							FULL_CUBE.model,
+							MathUtil.IDENTITY,
+							ctx.getCenter(),
+							false,
+							(i,q) -> side[i],
+							(m, i, q) -> isSnowed ? snowFullIcon.icon : grassInfo.grassTopTexture,
+							(rv, m, i, q, i2, v) -> {
+								rv.rotateUV(i == 0 || i == 1 ? rand[0] : uvRot[i]);
+								if(!isSnowed) {
+									if(m.aoEnabled && grassInfo.overrideColor == null) {
+										rv.multiplyColor(blockColor);
+									}
 								}
-							}
-							else {
-								if(!m.aoEnabled) {
-									//Redo diffuse color/shading as it was previously set with grass colors rather than snow
-									rv.setColor(RenderUtil.colorMult(16777215, OptifineCompatWrapper.getDiffusedMult(MathUtil.FORGEDIRS[i])));
+								else {
+									if(!m.aoEnabled) {
+										//Redo diffuse color/shading as it was previously set with grass colors rather than snow
+										rv.setColor(RenderUtil.colorMult(16777215, OptifineCompatWrapper.getDiffusedMult(MathUtil.FORGEDIRS[i])));
+									}
 								}
-							}
-						}));
-				rendered = true;
+							}));
+					rendered = true;
+				}
 			}
 			else {
 				rendered = renderWorldBlockBase(ctx, dispatcher, renderer, layer);
-				if(renderCutout) modelRenderer.updateShading(Int3.ZERO, RenderUtil.TOP_ONLY);
+				if(renderCutout) {
+					modelRenderer.updateShading(EnumFacing.UP);
+					topShaded = true;
+				}
 			}
 		}
 		
 		if(!renderCutout) return rendered;
 		
 		if(!ForgeConfigHandler.SHORTGRASS.enabled) return rendered;
-		if(isSnowed && !ForgeConfigHandler.SHORTGRASS.snowEnabled) return rendered;
-		if(!isSnowed && up.getMaterial() != Material.AIR) return rendered;
+		if(isSnowed) {
+			if(!ForgeConfigHandler.SHORTGRASS.snowEnabled) return rendered;
+			else if(up.getMaterial() == Material.CRAFTED_SNOW) return rendered;
+		}
+		else if(up.getMaterial() != Material.AIR) return rendered;
 		if(ForgeConfigHandler.SHORTGRASS.population < 64 && noise.get(ctx.getPos()) >= ForgeConfigHandler.SHORTGRASS.population) return rendered;
 		
 		IconSet iconSet = isSnowed ? this.snowedIcons : ForgeConfigHandler.SHORTGRASS.longerGrass ? this.normalLongIcons : this.normalShortIcons;
 		IconHolder iconGen = isSnowed ? this.snowedGenIcon : this.normalGenIcon;
 		
-		if(!renderPrimary) modelRenderer.updateShading(Int3.ZERO, RenderUtil.TOP_ONLY);
+		if(!topShaded) modelRenderer.updateShading(EnumFacing.UP);
 		
 		int[] rand = ctx.getSemiRandomArray(2);
 		OptifineCompatWrapper.grass(renderer, ForgeConfigHandler.SHORTGRASS.shaderWind, () -> modelRenderer.render(

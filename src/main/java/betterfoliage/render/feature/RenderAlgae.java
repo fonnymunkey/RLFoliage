@@ -5,14 +5,13 @@ import betterfoliage.compat.OptifineCompatWrapper;
 import betterfoliage.config.ForgeConfigHandler;
 import betterfoliage.render.ModelRenderer;
 import betterfoliage.render.BlockContext;
-import betterfoliage.render.math.Int3;
 import betterfoliage.render.util.MathUtil;
-import betterfoliage.render.util.RenderUtil;
 import betterfoliage.render.util.ShaderUtil;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.util.EnumFacing;
 import org.apache.logging.log4j.Level;
 
 public class RenderAlgae extends RenderingHandler {
@@ -37,11 +36,11 @@ public class RenderAlgae extends RenderingHandler {
 		return ForgeConfigHandler.ALGAE.enabled &&
 				renderCutout &&
 				ForgeConfigHandler.ALGAE.population > 0 &&
-				(ForgeConfigHandler.ALGAE.population >= 64 || (ForgeConfigHandler.ALGAE.population > this.noise.get(ctx.getPos()))) &&
+				ForgeConfigHandler.BLOCKS.dirtClassesMatcher.matchesClass(ctx.getBlock()) &&
+				ForgeConfigHandler.ALGAE.isBiomeValid(ctx.getBiomeId()) &&
 				ctx.getState(0, 2, 0).getMaterial() == Material.WATER &&
 				ctx.getState(0, 1, 0).getMaterial() == Material.WATER &&
-				ForgeConfigHandler.BLOCKS.dirtClassesMatcher.matchesClass(ctx.getBlock()) &&
-				ForgeConfigHandler.ALGAE.isBiomeValid(ctx.getBiomeId());
+				(ForgeConfigHandler.ALGAE.population >= 64 || (ForgeConfigHandler.ALGAE.population > this.noise.get(ctx.getPos())));
 	}
 	
 	@Override
@@ -51,7 +50,7 @@ public class RenderAlgae extends RenderingHandler {
 		if(!renderCutout) return rendered;
 		
 		ModelRenderer modelRenderer = ModelRenderer.MODEL_RENDERER.get();
-		modelRenderer.updateShading(Int3.ZERO, RenderUtil.TOP_ONLY);
+		modelRenderer.updateShading(EnumFacing.UP);
 		
 		int[] rand = ctx.getSemiRandomArray(3);
 		OptifineCompatWrapper.grass(renderer, ForgeConfigHandler.ALGAE.shaderWind, () -> modelRenderer.render(

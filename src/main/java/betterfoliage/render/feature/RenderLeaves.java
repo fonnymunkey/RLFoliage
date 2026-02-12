@@ -50,9 +50,7 @@ public class RenderLeaves extends RenderingHandler {
 	public boolean isEligible(BlockContext ctx, boolean renderPrimary, boolean renderCutout) {
 		return ForgeConfigHandler.LEAVES.enabled &&
 				renderCutout &&
-				LeafRegistry.LEAF_REGISTRY.get(ctx) != null &&
-				(!ForgeConfigHandler.LEAVES.hideInternal ||
-				!ctx.isSurroundedBy(s -> s.isFullCube() || s.getMaterial() == Material.LEAVES));
+				LeafRegistry.LEAF_REGISTRY.get(ctx) != null;
 	}
 	
 	@Override
@@ -68,11 +66,23 @@ public class RenderLeaves extends RenderingHandler {
 			logRenderError(ctx.getState(), ctx.getPos());
 			return rendered;
 		}
+		
+		if(ForgeConfigHandler.LEAVES.hideInternal) {
+			boolean obscured = true;
+			BlockPos.MutableBlockPos offsetPos = new BlockPos.MutableBlockPos();
+			for(int i = 0; i < MathUtil.FORGEDIRS.length; i++) {
+				EnumFacing face = MathUtil.FORGEDIRS[i];
+				offsetPos.setPos(ctx.getPos()).move(face);
+				IBlockState offsetState = ctx.getWorld().getBlockState(offsetPos);
+				obscured &= offsetState.isFullCube() || offsetState.getMaterial() == Material.LEAVES;
+			}
+			if(obscured) return rendered;
+		}
+		
 		int blockColor = OptifineCompatWrapper.getBlockColor(ctx, state, pos);
 		ModelRenderer modelRenderer = ModelRenderer.MODEL_RENDERER.get();
-		modelRenderer.updateShading(Int3.ZERO, RenderUtil.ALL_FACES);
-		IBlockState up = ctx.getState(0, 1, 0);
-		boolean isSnowed = RenderUtil.isSnow(up.getMaterial());
+		modelRenderer.updateShading();
+		boolean isSnowed = RenderUtil.isSnow(ctx.getState(0, 1, 0).getMaterial());
 		
 		OptifineCompatWrapper.leaves(renderer, ForgeConfigHandler.LEAVES.shaderWind, () -> {
 			int[] rand = ctx.getSemiRandomArray(2);

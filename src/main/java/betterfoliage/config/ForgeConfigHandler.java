@@ -124,10 +124,10 @@ public class ForgeConfigHandler {
 		public String[] biomes = new String[] {"river", "ocean"};
 		
 		@Config.Ignore
-		private transient final Set<Integer> biomeIds = new HashSet<>();
+		private transient final BitSet biomeIds = new BitSet();
 		
 		public boolean isBiomeValid(int id) {
-			return this.biomeIds.contains(id);
+			return this.biomeIds.get(id);
 		}
 		
 		public void refreshConfig() {
@@ -456,10 +456,10 @@ public class ForgeConfigHandler {
 		public String[] biomes = new String[] {"river", "ocean", "beach"};
 		
 		@Config.Ignore
-		private transient final Set<Integer> biomeIds = new HashSet<>();
+		private transient final BitSet biomeIds = new BitSet();
 		
 		public boolean isBiomeValid(int id) {
-			return this.biomeIds.contains(id);
+			return this.biomeIds.get(id);
 		}
 		
 		public void refreshConfig() {
@@ -537,6 +537,15 @@ public class ForgeConfigHandler {
 		@Config.RequiresMcRestart
 		@MixinConfig.MixinToggle(earlyMixin = "mixins.betterfoliage.mipmap.json", defaultValue = true)
 		public boolean mipmapGenPatch = true;
+		
+		@Config.Comment(
+				"Converts PooledMutableBlockPos to use a ThreadLocal pool rather than a synchronized pool to avoid thread contention" + "\n" +
+				"This causes a very slight increase in memory usage however should improve render performance" + "\n" +
+				"This patch is less needed when using Optifine as it has its own similar patches (But shouldn't conflict)")
+		@Config.Name("PooledMutableBlockPos Thread Contention Patch")
+		@Config.RequiresMcRestart
+		@MixinConfig.MixinToggle(earlyMixin = "mixins.betterfoliage.pooledpos.json", defaultValue = true)
+		public boolean pooledPosPatch = true;
 		
 		@Config.Comment(
 				"Adjusts block layer rendering to render cutout textures using mipmaps if enabled (Better visually)" + "\n" +
@@ -698,10 +707,10 @@ public class ForgeConfigHandler {
 		public String[] biomes = getBiomesFromMinTempRain(0.4F, 0.4F);
 		
 		@Config.Ignore
-		private transient final Set<Integer> biomeIds = new HashSet<>();
+		private transient final BitSet biomeIds = new BitSet();
 		
 		public boolean isBiomeValid(int id) {
-			return this.biomeIds.contains(id);
+			return this.biomeIds.get(id);
 		}
 		
 		public void refreshConfig() {
@@ -846,7 +855,7 @@ public class ForgeConfigHandler {
 		public boolean longerGrass = true;
 	}
 	
-	private static void filterBiomesByNameOrId(String[] entries, Set<Integer> targetSet) {
+	private static void filterBiomesByNameOrId(String[] entries, BitSet targetSet) {
 		if(entries == null || entries.length == 0 || targetSet == null) return;
 		
 		ArrayList<String> byName = new ArrayList<>();
@@ -856,7 +865,7 @@ public class ForgeConfigHandler {
 			if(name.isEmpty()) continue;
 			try {
 				int id = Integer.parseInt(name);
-				targetSet.add(id);
+				targetSet.set(id);
 			}
 			catch(Exception ex) {
 				byName.add(name);
@@ -865,7 +874,7 @@ public class ForgeConfigHandler {
 		
 		for(String name : byName) {
 			for(Biome biome : getBiomesByType(name)) {
-				targetSet.add(Biome.getIdForBiome(biome));
+				targetSet.set(Biome.getIdForBiome(biome));
 			}
 		}
 	}

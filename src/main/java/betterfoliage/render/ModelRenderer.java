@@ -11,8 +11,6 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.EnumFacing;
 
-import java.util.function.Function;
-
 public class ModelRenderer {
 	public static final ThreadLocal<ModelRenderer> MODEL_RENDERER = ThreadLocal.withInitial(ModelRenderer::new);
 	public final BlockContext BLOCK_CONTEXT;
@@ -65,10 +63,23 @@ public class ModelRenderer {
 		}
 	}
 	
-	public void updateShading(Int3 offset, Function<EnumFacing,Boolean> predicate) {
+	public void updateShading() {
+		if(!this.aoEnabled) return;
 		for(EnumFacing facing : MathUtil.FORGEDIRS) {
-			if(predicate.apply(facing)) {
-				this.aoFaces[facing.ordinal()].update(offset, OptifineCompatWrapper.getDiffusedMult(facing));
+			this.aoFaces[facing.ordinal()].update(OptifineCompatWrapper.getDiffusedMult(facing));
+		}
+	}
+	
+	public void updateShading(EnumFacing facing) {
+		if(!this.aoEnabled) return;
+		this.aoFaces[facing.ordinal()].update(OptifineCompatWrapper.getDiffusedMult(facing));
+	}
+	
+	public void updateShading(boolean[] faces) {
+		if(!this.aoEnabled) return;
+		for(EnumFacing facing : MathUtil.FORGEDIRS) {
+			if(faces[facing.ordinal()]) {
+				this.aoFaces[facing.ordinal()].update(OptifineCompatWrapper.getDiffusedMult(facing));
 			}
 		}
 	}

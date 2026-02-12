@@ -3,7 +3,6 @@ package betterfoliage.render.model;
 import betterfoliage.mixin.AmbientOcclusionFaceAccessor;
 import betterfoliage.render.BlockContext;
 import betterfoliage.render.ModelRenderer;
-import betterfoliage.render.math.Int3;
 import betterfoliage.render.util.MathUtil;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -37,14 +36,14 @@ public class AoFaceData {
 		this.left = MathUtil.FACE_CORNERS.get(face.ordinal()).topLeft.r;
 	}
 	
-	public void update(Int3 offset, float multiplier) {
+	public void update(float multiplier) {
 		BlockContext ctx = ModelRenderer.MODEL_RENDERER.get().BLOCK_CONTEXT;
-		IBlockState state = ctx.getState(offset);
+		IBlockState state = ctx.getState();
 		float[] quadBounds = new float[12];
 		BitSet flags = new BitSet(3);
 		flags.set(0);
 		
-		this.AOF.updateVertexBrightness(ctx.getWorld(), state, ctx.getPos(offset), this.face, quadBounds, flags);
+		this.AOF.updateVertexBrightness(ctx.getWorld(), state, ctx.getPos(), this.face, quadBounds, flags);
 		for(int i = 0; i < this.ordered.length; i++) {
 			this.ordered[i].set(this.AOF.vertexBrightness[i], this.AOF.vertexColorMultiplier[i] * multiplier);
 		}

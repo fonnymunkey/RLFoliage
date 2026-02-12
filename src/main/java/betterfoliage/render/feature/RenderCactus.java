@@ -5,12 +5,10 @@ import betterfoliage.config.ForgeConfigHandler;
 import betterfoliage.render.BlockContext;
 import betterfoliage.render.ModelRenderer;
 import betterfoliage.render.math.Double3;
-import betterfoliage.render.math.Int3;
 import betterfoliage.render.math.Rotation;
 import betterfoliage.render.model.Model;
 import betterfoliage.render.registry.CactusRegistry;
 import betterfoliage.render.util.MathUtil;
-import betterfoliage.render.util.RenderUtil;
 import betterfoliage.render.util.ShaderUtil;
 import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -95,7 +93,7 @@ public class RenderCactus extends RenderingHandler {
 		}
 		
 		ModelRenderer modelRenderer = ModelRenderer.MODEL_RENDERER.get();
-		modelRenderer.updateShading(Int3.ZERO, RenderUtil.ALL_FACES);
+		modelRenderer.updateShading();
 		
 		if(renderPrimary) {
 			modelRenderer.render(

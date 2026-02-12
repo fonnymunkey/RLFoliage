@@ -10,7 +10,6 @@ import betterfoliage.render.math.Int3;
 import betterfoliage.render.model.Model;
 import betterfoliage.render.shader.FlatOffsetNoColor;
 import betterfoliage.render.util.MathUtil;
-import betterfoliage.render.util.RenderUtil;
 import betterfoliage.render.util.ShaderUtil;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.BlockRendererDispatcher;
@@ -29,14 +28,12 @@ public class RenderReeds extends RenderingHandler {
 		double waterline = 0.875;
 		double vCutLine = 0.5 - waterline / height;
 		model.addAll(Model.verticalRectangle(-0.5, 0.5, 0.5, -0.5, 0.5, 0.5 + waterline)
-						  .setAoShader(new FlatOffsetNoColor(new Int3(0, 1, 0)))
 						  .setFlatShader(new FlatOffsetNoColor(new Int3(0, 1, 0)))
 						  .clampUV(-0.25, 0.25, vCutLine, 0.5)
 						  .toCross(EnumFacing.UP, q ->
 								  q.move(MathUtil.xzDisk(i).mul(ForgeConfigHandler.REED.hOffset)))
 					);
 		model.addAll(Model.verticalRectangle(-0.5, 0.5, 0.5, -0.5, 0.5 + waterline, 0.5 + height)
-						  .setAoShader(new FlatOffsetNoColor(new Int3(0, 1, 0)))
 						  .setFlatShader(new FlatOffsetNoColor(new Int3(0, 2, 0)))
 						  .clampUV(-0.25, 0.25, -0.5, vCutLine)
 						  .toCross(EnumFacing.UP, q ->
@@ -59,11 +56,11 @@ public class RenderReeds extends RenderingHandler {
 		return ForgeConfigHandler.REED.enabled &&
 				renderCutout &&
 				ForgeConfigHandler.REED.population > 0 &&
-				(ForgeConfigHandler.REED.population >= 64 || ForgeConfigHandler.REED.population > this.noise.get(ctx.getPos())) &&
+				ForgeConfigHandler.BLOCKS.dirtClassesMatcher.matchesClass(ctx.getBlock()) &&
+				ForgeConfigHandler.REED.isBiomeValid(ctx.getBiomeId()) &&
 				ctx.getState(0, 2, 0).getMaterial() == Material.AIR &&
 				ctx.getState(0, 1, 0).getMaterial() == Material.WATER &&
-				ForgeConfigHandler.BLOCKS.dirtClassesMatcher.matchesClass(ctx.getBlock()) &&
-				ForgeConfigHandler.REED.isBiomeValid(ctx.getBiomeId());
+				(ForgeConfigHandler.REED.population >= 64 || ForgeConfigHandler.REED.population > this.noise.get(ctx.getPos()));
 	}
 	
 	@Override
@@ -73,7 +70,6 @@ public class RenderReeds extends RenderingHandler {
 		if(!renderCutout) return rendered;
 		
 		ModelRenderer modelRenderer = ModelRenderer.MODEL_RENDERER.get();
-		modelRenderer.updateShading(Int3.ZERO, RenderUtil.ALL_FACES);
 		
 		int iconVar = ctx.getRandom(1);
 		OptifineCompatWrapper.grass(renderer, ForgeConfigHandler.REED.shaderWind, () -> modelRenderer.render(

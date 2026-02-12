@@ -5,7 +5,6 @@ import betterfoliage.config.ForgeConfigHandler;
 import betterfoliage.render.BlockContext;
 import betterfoliage.render.ModelRenderer;
 import betterfoliage.render.generator.ConnectedGrassGenerator;
-import betterfoliage.render.math.Int3;
 import betterfoliage.render.math.Pair;
 import betterfoliage.render.registry.GrassRegistry;
 import betterfoliage.render.util.MathUtil;
@@ -35,14 +34,14 @@ public class RenderConnectedGrass extends RenderingHandler {
 	@Override
 	public boolean isEligible(BlockContext ctx, boolean renderPrimary, boolean renderCutout) {
 		return ForgeConfigHandler.CONNECTEDGRASS.enabled &&
-				(ForgeConfigHandler.CONNECTEDGRASS.snowEnabled || !RenderUtil.isSnow(ctx.getState(0, 2, 0).getMaterial())) &&
 				ForgeConfigHandler.BLOCKS.dirtClassesMatcher.matchesClass(ctx.getBlock()) &&
+				(ForgeConfigHandler.CONNECTEDGRASS.snowEnabled || !RenderUtil.isSnow(ctx.getState(0, 2, 0).getMaterial())) &&
 				GrassRegistry.GRASS_REGISTRY.get(ctx.getState(0, 1, 0), ctx.getWorld(), ctx.getPos(0, 1, 0)) != null;
 	}
 	
 	@Override
 	public boolean render(BlockContext ctx, BlockRendererDispatcher dispatcher, BufferBuilder renderer, BlockRenderLayer layer, boolean renderPrimary, boolean renderCutout) {
-		if(!renderCutout) return false;//Fully replace rendering to render cutout
+		if(!renderCutout) return false;
 		IBlockState stateUp = ctx.getState(0, 1, 0);
 		BlockPos posUp = ctx.getPos(0, 1, 0);
 		GrassRegistry.GrassInfo grassInfoUp = GrassRegistry.GRASS_REGISTRY.get(stateUp, ctx.getWorld(), posUp);
@@ -83,9 +82,10 @@ public class RenderConnectedGrass extends RenderingHandler {
 		}
 		if(!shouldRenderOverlay) return renderWorldBlockBase(ctx, dispatcher, renderer, layer);
 		
-		int blockColorUp = OptifineCompatWrapper.getBlockColor(ctx, stateUp, posUp);
 		ModelRenderer modelRenderer = ModelRenderer.MODEL_RENDERER.get();
-		modelRenderer.updateShading(Int3.ZERO, RenderUtil.ALL_FACES);
+		modelRenderer.updateShading(sideBase);
+		
+		int blockColorUp = OptifineCompatWrapper.getBlockColor(ctx, stateUp, posUp);
 		boolean isSnowed = RenderUtil.isSnow(ctx.getState(0, 2, 0).getMaterial());
 		
 		TextureAtlasSprite sideSpriteOverlay;
