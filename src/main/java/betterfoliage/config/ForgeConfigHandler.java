@@ -831,7 +831,7 @@ public class ForgeConfigHandler {
 		
 		@Config.Name("Use Generated")
 		@Config.LangKey("betterfoliage.shortGrass.useGenerated")
-		public boolean useGenerated = true;
+		public boolean useGenerated = false;
 		
 		@Config.Name("Mycelium Enabled")
 		@Config.LangKey("betterfoliage.shortGrass.myceliumEnabled")
