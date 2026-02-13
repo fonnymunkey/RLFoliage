@@ -3,6 +3,7 @@ package betterfoliage.render.feature;
 import betterfoliage.BetterFoliage;
 import betterfoliage.config.ForgeConfigHandler;
 import betterfoliage.render.BlockContext;
+import betterfoliage.render.ModelRenderer;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockCactus;
 import net.minecraft.block.BlockRedstoneWire;
@@ -16,6 +17,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.world.IBlockAccess;
 import org.apache.logging.log4j.Level;
 
 import java.util.ArrayList;
@@ -33,8 +35,32 @@ public abstract class RenderingHandler extends ResourceHandler {
 	public abstract boolean isEligible(BlockContext ctx, boolean renderPrimary, boolean renderCutout);
 	public abstract boolean render(BlockContext ctx, BlockRendererDispatcher dispatcher, BufferBuilder renderer, BlockRenderLayer layer, boolean renderPrimary, boolean renderCutout);
 	
-	public static boolean renderWorldBlockBase(BlockContext ctx, BlockRendererDispatcher dispatcher, BufferBuilder renderer, BlockRenderLayer layer) {
-		return dispatcher.renderBlock(ctx.getState(), ctx.getPos(), ctx.getWorld(), renderer);
+	public static Boolean wrapRenderBlock(BlockRendererDispatcher dispatcher, IBlockState state, BlockPos pos, IBlockAccess blockAccess, BufferBuilder worldRenderer, BlockRenderLayer layer) {
+		if(!ForgeConfigHandler.GLOBAL.enabled) return null;
+		
+		ModelRenderer modelRenderer = ModelRenderer.MODEL_RENDERER.get();
+		modelRenderer.BLOCK_CONTEXT.set(blockAccess, pos, state);
+		
+		boolean renderCutout;
+		boolean renderPrimary;
+		if(ForgeConfigHandler.GLOBAL.renderLayerAdjustments) {
+			//Previous render check fixes proper cutout layers so specific check is not needed
+			renderCutout = layer == BlockRenderLayer.CUTOUT || layer == BlockRenderLayer.CUTOUT_MIPPED;
+			//Render the base block if it normally renders non-cutout, or renders in either of the cutouts overriden by mip check
+			renderPrimary = !renderCutout || state.getBlock().canRenderInLayer(state, BlockRenderLayer.CUTOUT) || state.getBlock().canRenderInLayer(state, BlockRenderLayer.CUTOUT_MIPPED);
+		}
+		else {
+			renderPrimary = state.getBlock().canRenderInLayer(state, layer);
+			renderCutout = layer == BlockRenderLayer.CUTOUT;
+		}
+		
+		for(RenderingHandler renderer : RenderingHandler.RENDERERS) {
+			if(renderer.isEligible(modelRenderer.BLOCK_CONTEXT, renderPrimary, renderCutout)) {
+				return renderer.render(modelRenderer.BLOCK_CONTEXT, dispatcher, worldRenderer, layer, renderPrimary, renderCutout);
+			}
+		}
+		
+		return renderPrimary ? null : false;
 	}
 	
 	public static boolean canRenderBlockInLayer(Block block, IBlockState state, BlockRenderLayer layer) {
@@ -67,6 +93,10 @@ public abstract class RenderingHandler extends ResourceHandler {
 			//If not mipped, render cutouts on base cutout
 			return layer == BlockRenderLayer.CUTOUT;
 		}
+	}
+	
+	public static boolean renderWorldBlockBase(BlockContext ctx, BlockRendererDispatcher dispatcher, BufferBuilder renderer, BlockRenderLayer layer) {
+		return dispatcher.renderBlock(ctx.getState(), ctx.getPos(), ctx.getWorld(), renderer);
 	}
 	
 	private static final Set<IBlockState> ERRORED_STATES = new HashSet<>();

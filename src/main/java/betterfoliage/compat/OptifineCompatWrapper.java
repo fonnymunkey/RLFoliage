@@ -13,9 +13,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.ChunkCache;
 import net.minecraft.world.IBlockAccess;
-import net.minecraft.world.World;
 import org.apache.logging.log4j.Level;
 
 public abstract class OptifineCompatWrapper {
@@ -78,13 +76,13 @@ public abstract class OptifineCompatWrapper {
 		if(isOptifineLoaded()) OptifineHandler.setQuadSprite(worldRenderer, sprite);
 	}
 	
+	public static boolean isCacheOF(IBlockAccess access) {
+		if(isOptifineLoaded()) return OptifineHandler.isCacheOF(access);
+		return false;
+	}
+	
 	public static boolean isBlockLoadedSafe(IBlockAccess access, BlockPos pos) {
-		if(!isOptifineLoaded()) {
-			if(access instanceof World) return ((World)access).isBlockLoaded(pos, false);
-			if(access instanceof ChunkCache) return ((ChunkCache)access).world.isBlockLoaded(pos, false);
-			return false;
-		}
-		else return OptifineHandler.isBlockLoadedSafe(access, pos);
+		return OptifineHandler.isBlockLoadedSafe(access, pos);
 	}
 	
 	public static float getDiffusedMult(EnumFacing face) {

@@ -19,6 +19,7 @@ public class BetterFoliagePlugin implements IFMLLoadingPlugin {
 		FermiumRegistryAPI.enqueueMixin(false, "mixins.betterfoliage.nonoptifine.json", () -> !FermiumRegistryAPI.isModPresent("optifine"));
 		FermiumRegistryAPI.enqueueMixin(false, "mixins.betterfoliage.vintagefix.json", () -> FermiumRegistryAPI.isModPresent("vintagefix"));
 		FermiumRegistryAPI.enqueueMixin(true, "mixins.betterfoliage.forestry.json", () -> FermiumRegistryAPI.isModPresent("forestry"));
+		FermiumRegistryAPI.enqueueMixin(true, "mixins.betterfoliage.nothirium.json", () -> FermiumRegistryAPI.isModPresent("nothirium"));
 	}
 	
 	@Override

@@ -47,6 +47,7 @@ dependencies {
     implementation fg.deobf("curse.maven:fermiumbooter-${fermiumbooter_version}")
     implementation fg.deobf("curse.maven:forestry-${forestry_version}")
     implementation fg.deobf("curse.maven:vintagefix-${vintagefix_version}")
+    implementation fg.deobf("curse.maven:nothirium-${nothirium_version}")
     compileOnly fg.deobf("net.optifine:optifine:1.12.2-HD_U_G5_unpatched_srg")
 }
 

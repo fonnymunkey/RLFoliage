@@ -22,7 +22,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.ChunkCache;
 import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.World;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -112,11 +114,19 @@ public abstract class ForestryHandler {
 		
 		private static TileEntity getTileEntitySafe(IBlockAccess access, BlockPos pos) {
 			try {
-				return OptifineCompatWrapper.isBlockLoadedSafe(access, pos) ? access.getTileEntity(pos) : null;
+				return isBlockLoadedSafe(access, pos) ? access.getTileEntity(pos) : null;
 			}
 			catch(Exception ignored) {
 				return null;
 			}
+		}
+		
+		private static boolean isBlockLoadedSafe(IBlockAccess access, BlockPos pos) {
+			if(access instanceof World) return ((World)access).isBlockLoaded(pos, false);
+			if(access instanceof ChunkCache) return ((ChunkCache)access).world.isBlockLoaded(pos, false);
+			if(OptifineCompatWrapper.isCacheOF(access)) return OptifineCompatWrapper.isBlockLoadedSafe(access, pos);
+			if(NothiriumCompatWrapper.isCacheNothirium(access)) return NothiriumCompatWrapper.isBlockLoadedSafe(access, pos);
+			return false;
 		}
 	}
 }

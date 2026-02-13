@@ -11,9 +11,7 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.ChunkCache;
 import net.minecraft.world.IBlockAccess;
-import net.minecraft.world.World;
 import net.optifine.CustomColors;
 import net.optifine.override.ChunkCacheOF;
 import net.optifine.render.RenderEnv;
@@ -49,11 +47,12 @@ public abstract class OptifineHandler {
 		((IBufferBuilderOptifineMixin)worldRenderer).betterfoliage$setQuadSprite(sprite);
 	}
 	
+	public static boolean isCacheOF(IBlockAccess access) {
+		return access instanceof ChunkCacheOF;
+	}
+	
 	public static boolean isBlockLoadedSafe(IBlockAccess access, BlockPos pos) {
-		if(access instanceof World) return ((World)access).isBlockLoaded(pos, false);
-		if(access instanceof ChunkCache) return ((ChunkCache)access).world.isBlockLoaded(pos, false);
-		if(access instanceof ChunkCacheOF) return ((ChunkCacheOFAccessor)access).getChunkCache().world.isBlockLoaded(pos, false);
-		return false;
+		return ((ChunkCacheOFAccessor)access).getChunkCache().world.isBlockLoaded(pos, false);
 	}
 	
 	public static float getDiffusedMult(EnumFacing face) {
