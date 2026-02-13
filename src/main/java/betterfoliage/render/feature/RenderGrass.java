@@ -16,15 +16,14 @@ import betterfoliage.render.util.ShaderUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import org.apache.logging.log4j.Level;
 
 import java.util.function.BiConsumer;
+import java.util.function.Supplier;
 
 public class RenderGrass extends RenderingHandler {
 	public static final RenderGrass RENDER_GRASS = new RenderGrass();
@@ -76,13 +75,13 @@ public class RenderGrass extends RenderingHandler {
 	}
 	
 	@Override
-	public boolean render(BlockContext ctx, BlockRendererDispatcher dispatcher, BufferBuilder renderer, BlockRenderLayer layer, boolean renderPrimary, boolean renderCutout) {
+	public boolean render(BlockContext ctx, Supplier<Boolean> renderBase, Supplier<BufferBuilder> worldRenderer, boolean renderPrimary, boolean renderCutout) {
 		boolean rendered = false;
 		
 		GrassRegistry.GrassInfo grassInfo = GrassRegistry.GRASS_REGISTRY.get(ctx);
 		if(grassInfo == null) {
 			logRenderError(ctx.getState(), ctx.getPos());
-			return renderPrimary && renderWorldBlockBase(ctx, dispatcher, renderer, layer);
+			return renderPrimary && renderBase.get();
 		}
 		int blockColor = OptifineCompatWrapper.getBlockColor(ctx, ctx.getState(), ctx.getPos());
 		ModelRenderer modelRenderer = ModelRenderer.MODEL_RENDERER.get();
@@ -90,6 +89,7 @@ public class RenderGrass extends RenderingHandler {
 		boolean isSnowed = RenderUtil.isSnow(up.getMaterial());
 		boolean topShaded = false;
 		
+		BufferBuilder renderer = null;
 		if(renderPrimary) {
 			boolean connectedGrass = ForgeConfigHandler.CONNECTEDGRASS.enabled && (!isSnowed || ForgeConfigHandler.CONNECTEDGRASS.snowEnabled);
 			if(connectedGrass) {
@@ -115,8 +115,10 @@ public class RenderGrass extends RenderingHandler {
 				if(doRender) {
 					modelRenderer.updateShading(side);
 					int[] rand = ctx.getSemiRandomArray(1);
+					renderer = worldRenderer.get();
+					BufferBuilder finalRenderer = renderer;
 					OptifineCompatWrapper.renderAs(ctx.getState(), EnumBlockRenderType.MODEL, renderer, true, () -> modelRenderer.render(
-							renderer,
+							finalRenderer,
 							FULL_CUBE.model,
 							MathUtil.IDENTITY,
 							ctx.getCenter(),
@@ -141,7 +143,7 @@ public class RenderGrass extends RenderingHandler {
 				}
 			}
 			else {
-				rendered = renderWorldBlockBase(ctx, dispatcher, renderer, layer);
+				rendered = renderBase.get();
 				if(renderCutout) {
 					modelRenderer.updateShading(EnumFacing.UP);
 					topShaded = true;
@@ -165,8 +167,10 @@ public class RenderGrass extends RenderingHandler {
 		if(!topShaded) modelRenderer.updateShading(EnumFacing.UP);
 		
 		int[] rand = ctx.getSemiRandomArray(2);
+		if(renderer == null) renderer = worldRenderer.get();
+		BufferBuilder finalRenderer1 = renderer;
 		OptifineCompatWrapper.grass(renderer, ForgeConfigHandler.SHORTGRASS.shaderWind, () -> modelRenderer.render(
-				renderer,
+				finalRenderer1,
 				grassModels.get(rand[0]),
 				MathUtil.IDENTITY,
 				isSnowed ? ctx.getCenter().add(0, 0.0625, 0) : ctx.getCenter(),

@@ -33,7 +33,7 @@ public abstract class RenderChunkTaskCompileMixin {
 			at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/BlockRendererDispatcher;renderBlock(Lnet/minecraft/block/state/IBlockState;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/world/IBlockAccess;Lnet/minecraft/client/renderer/BufferBuilder;)Z")
 	)
 	private boolean betterfoliage_nothiriumRenderChunkTaskCompile_renderBlockState_renderBlock(BlockRendererDispatcher dispatcher, IBlockState state, BlockPos pos, IBlockAccess blockAccess, BufferBuilder worldRenderer, Operation<Boolean> original, @Local BlockRenderLayer layer) {
-		Boolean result = RenderingHandler.wrapRenderBlock(dispatcher, state, pos, blockAccess, worldRenderer, layer);
+		Boolean result = RenderingHandler.wrapRenderBlock(() -> original.call(dispatcher, state, pos, blockAccess, worldRenderer), state, pos, blockAccess, () -> worldRenderer, layer);
 		if(result == null) return original.call(dispatcher, state, pos, blockAccess, worldRenderer);
 		else return result;
 	}

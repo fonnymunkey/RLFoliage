@@ -9,7 +9,6 @@ import net.minecraft.block.BlockCactus;
 import net.minecraft.block.BlockRedstoneWire;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.math.BlockPos;
@@ -24,6 +23,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Supplier;
 
 public abstract class RenderingHandler extends ResourceHandler {
 	public static final List<RenderingHandler> RENDERERS = new ArrayList<>();
@@ -33,9 +33,9 @@ public abstract class RenderingHandler extends ResourceHandler {
 	}
 	
 	public abstract boolean isEligible(BlockContext ctx, boolean renderPrimary, boolean renderCutout);
-	public abstract boolean render(BlockContext ctx, BlockRendererDispatcher dispatcher, BufferBuilder renderer, BlockRenderLayer layer, boolean renderPrimary, boolean renderCutout);
+	public abstract boolean render(BlockContext ctx, Supplier<Boolean> renderBase, Supplier<BufferBuilder> worldRenderer, boolean renderPrimary, boolean renderCutout);
 	
-	public static Boolean wrapRenderBlock(BlockRendererDispatcher dispatcher, IBlockState state, BlockPos pos, IBlockAccess blockAccess, BufferBuilder worldRenderer, BlockRenderLayer layer) {
+	public static Boolean wrapRenderBlock(Supplier<Boolean> renderBase, IBlockState state, BlockPos pos, IBlockAccess blockAccess, Supplier<BufferBuilder> worldRenderer, BlockRenderLayer layer) {
 		if(!ForgeConfigHandler.GLOBAL.enabled) return null;
 		
 		ModelRenderer modelRenderer = ModelRenderer.MODEL_RENDERER.get();
@@ -56,7 +56,7 @@ public abstract class RenderingHandler extends ResourceHandler {
 		
 		for(RenderingHandler renderer : RenderingHandler.RENDERERS) {
 			if(renderer.isEligible(modelRenderer.BLOCK_CONTEXT, renderPrimary, renderCutout)) {
-				return renderer.render(modelRenderer.BLOCK_CONTEXT, dispatcher, worldRenderer, layer, renderPrimary, renderCutout);
+				return renderer.render(modelRenderer.BLOCK_CONTEXT, renderBase, worldRenderer, renderPrimary, renderCutout);
 			}
 		}
 		
@@ -93,10 +93,6 @@ public abstract class RenderingHandler extends ResourceHandler {
 			//If not mipped, render cutouts on base cutout
 			return layer == BlockRenderLayer.CUTOUT;
 		}
-	}
-	
-	public static boolean renderWorldBlockBase(BlockContext ctx, BlockRendererDispatcher dispatcher, BufferBuilder renderer, BlockRenderLayer layer) {
-		return dispatcher.renderBlock(ctx.getState(), ctx.getPos(), ctx.getWorld(), renderer);
 	}
 	
 	private static final Set<IBlockState> ERRORED_STATES = new HashSet<>();
