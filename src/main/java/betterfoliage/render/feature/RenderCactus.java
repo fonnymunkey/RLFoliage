@@ -58,9 +58,9 @@ public class RenderCactus extends RenderingHandler {
 						  .toCross(EnumFacing.UP));
 	});
 	private final ModelSet modelArm = getModelSet(64, (model, i) -> {
-		model.addAll(Model.verticalRectangle(-0.5, 0.5, 0.5, -0.5, 0.0, 1.0)
+		model.addAll(Model.verticalRectangle(-cactusStemRadius, cactusStemRadius, cactusStemRadius, -cactusStemRadius, 0.0, 1.2374)
 						  .scale(ForgeConfigHandler.CACTUS.size)
-						  .move(0, 0.5, 0)
+						  .move(0, cactusStemRadius, 0)
 						  .setAoShader(ShaderUtil.faceOrientedAuto(EnumFacing.UP, ShaderUtil.cornerAo(EnumFacing.Axis.Y)))
 						  .setFlatShader(ShaderUtil.faceOrientedAuto(EnumFacing.UP, ShaderUtil.CORNER_FLAT))
 						  .toCross(EnumFacing.UP, q -> q.move(MathUtil.xzDisk(i).mul(ForgeConfigHandler.CACTUS.hOffset))));
