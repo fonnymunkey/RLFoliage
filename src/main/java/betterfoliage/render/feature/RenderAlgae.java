@@ -8,11 +8,11 @@ import betterfoliage.render.BlockContext;
 import betterfoliage.render.util.MathUtil;
 import betterfoliage.render.util.ShaderUtil;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import org.apache.logging.log4j.Level;
+
+import java.util.function.Supplier;
 
 public class RenderAlgae extends RenderingHandler {
 	public static final RenderAlgae RENDER_ALGAE = new RenderAlgae();
@@ -44,14 +44,15 @@ public class RenderAlgae extends RenderingHandler {
 	}
 	
 	@Override
-	public boolean render(BlockContext ctx, BlockRendererDispatcher dispatcher, BufferBuilder renderer, BlockRenderLayer layer, boolean renderPrimary, boolean renderCutout) {
+	public boolean render(BlockContext ctx, Supplier<Boolean> renderBase, Supplier<BufferBuilder> worldRenderer, boolean renderPrimary, boolean renderCutout) {
 		boolean rendered = false;
-		if(renderPrimary) rendered = renderWorldBlockBase(ctx, dispatcher, renderer, layer);
+		if(renderPrimary) rendered = renderBase.get();
 		if(!renderCutout) return rendered;
 		
 		ModelRenderer modelRenderer = ModelRenderer.MODEL_RENDERER.get();
 		modelRenderer.updateShading(EnumFacing.UP);
 		
+		BufferBuilder renderer = worldRenderer.get();
 		int[] rand = ctx.getSemiRandomArray(3);
 		OptifineCompatWrapper.grass(renderer, ForgeConfigHandler.ALGAE.shaderWind, () -> modelRenderer.render(
 				renderer,

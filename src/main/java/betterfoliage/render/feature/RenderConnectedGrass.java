@@ -10,13 +10,13 @@ import betterfoliage.render.registry.GrassRegistry;
 import betterfoliage.render.util.MathUtil;
 import betterfoliage.render.util.RenderUtil;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+
+import java.util.function.Supplier;
 
 public class RenderConnectedGrass extends RenderingHandler {
 	public static final RenderConnectedGrass RENDER_CONNECTED_GRASS = new RenderConnectedGrass();
@@ -40,14 +40,14 @@ public class RenderConnectedGrass extends RenderingHandler {
 	}
 	
 	@Override
-	public boolean render(BlockContext ctx, BlockRendererDispatcher dispatcher, BufferBuilder renderer, BlockRenderLayer layer, boolean renderPrimary, boolean renderCutout) {
+	public boolean render(BlockContext ctx, Supplier<Boolean> renderBase, Supplier<BufferBuilder> worldRenderer, boolean renderPrimary, boolean renderCutout) {
 		if(!renderCutout) return false;
 		IBlockState stateUp = ctx.getState(0, 1, 0);
 		BlockPos posUp = ctx.getPos(0, 1, 0);
 		GrassRegistry.GrassInfo grassInfoUp = GrassRegistry.GRASS_REGISTRY.get(stateUp, ctx.getWorld(), posUp);
 		if(grassInfoUp == null) {
 			logRenderError(stateUp, posUp);
-			return renderWorldBlockBase(ctx, dispatcher, renderer, layer);
+			return renderBase.get();
 		}
 		
 		//Get face textures based on visibility of above grass block
@@ -64,7 +64,7 @@ public class RenderConnectedGrass extends RenderingHandler {
 				shouldRenderOverlay |= sideOverlay[i];
 			}
 		}
-		if(!shouldRenderOverlay) return renderWorldBlockBase(ctx, dispatcher, renderer, layer);
+		if(!shouldRenderOverlay) return renderBase.get();
 		shouldRenderOverlay = false;
 		boolean[] sideBase = new boolean[6];
 		for(int i = 0; i < MathUtil.FORGEDIRS.length; i++) {
@@ -80,7 +80,7 @@ public class RenderConnectedGrass extends RenderingHandler {
 				shouldRenderOverlay |= sideOverlay[i] && face != EnumFacing.DOWN;
 			}
 		}
-		if(!shouldRenderOverlay) return renderWorldBlockBase(ctx, dispatcher, renderer, layer);
+		if(!shouldRenderOverlay) return renderBase.get();
 		
 		ModelRenderer modelRenderer = ModelRenderer.MODEL_RENDERER.get();
 		modelRenderer.updateShading(sideBase);
@@ -91,8 +91,9 @@ public class RenderConnectedGrass extends RenderingHandler {
 		TextureAtlasSprite sideSpriteOverlay;
 		if(ForgeConfigHandler.CONNECTEDGRASS.longerSides) sideSpriteOverlay = isSnowed ? this.snowLongOverlayTexture.icon : grassInfoUp.sideLongOverlayTexture;
 		else sideSpriteOverlay = isSnowed ? this.snowShortOverlayTexture.icon : grassInfoUp.sideShortOverlayTexture;
-		int[] rand = ctx.getSemiRandomArray(1);
 		
+		int[] rand = ctx.getSemiRandomArray(1);
+		BufferBuilder renderer = worldRenderer.get();
 		OptifineCompatWrapper.renderAs(stateUp, EnumBlockRenderType.MODEL, renderer, true, () -> modelRenderer.render(
 				renderer,
 				RenderGrass.RENDER_GRASS.FULL_CUBE.model,

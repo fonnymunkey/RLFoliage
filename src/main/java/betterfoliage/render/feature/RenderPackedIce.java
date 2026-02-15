@@ -7,11 +7,11 @@ import betterfoliage.render.ModelRenderer;
 import betterfoliage.render.model.Model;
 import betterfoliage.render.util.MathUtil;
 import betterfoliage.render.util.ShaderUtil;
-import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import org.apache.logging.log4j.Level;
+
+import java.util.function.Supplier;
 
 public class RenderPackedIce extends RenderingHandler {
 	public static final RenderPackedIce RENDER_PACKED_ICE = new RenderPackedIce();
@@ -44,9 +44,9 @@ public class RenderPackedIce extends RenderingHandler {
 	}
 	
 	@Override
-	public boolean render(BlockContext ctx, BlockRendererDispatcher dispatcher, BufferBuilder renderer, BlockRenderLayer layer, boolean renderPrimary, boolean renderCutout) {
+	public boolean render(BlockContext ctx, Supplier<Boolean> renderBase, Supplier<BufferBuilder> worldRenderer, boolean renderPrimary, boolean renderCutout) {
 		boolean rendered = false;
-		if(renderPrimary) rendered = renderWorldBlockBase(ctx, dispatcher, renderer, layer);
+		if(renderPrimary) rendered = renderBase.get();
 		if(!renderCutout) return rendered;
 		
 		if(ctx.getState(0, -1, 0).isOpaqueCube()) return rendered;
@@ -55,6 +55,7 @@ public class RenderPackedIce extends RenderingHandler {
 		modelRenderer.updateShading(EnumFacing.DOWN);
 		
 		int[] rand = ctx.getSemiRandomArray(2);
+		BufferBuilder renderer = worldRenderer.get();
 		modelRenderer.render(
 				renderer,
 				packedIceModel.get(rand[0]),

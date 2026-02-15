@@ -8,12 +8,12 @@ import betterfoliage.render.model.Model;
 import betterfoliage.render.util.MathUtil;
 import betterfoliage.render.util.ShaderUtil;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import org.apache.logging.log4j.Level;
+
+import java.util.function.Supplier;
 
 public class RenderCoral extends RenderingHandler {
 	public static final RenderCoral RENDER_CORAL = new RenderCoral();
@@ -61,9 +61,9 @@ public class RenderCoral extends RenderingHandler {
 	}
 	
 	@Override
-	public boolean render(BlockContext ctx, BlockRendererDispatcher dispatcher, BufferBuilder renderer, BlockRenderLayer layer, boolean renderPrimary, boolean renderCutout) {
+	public boolean render(BlockContext ctx, Supplier<Boolean> renderBase,Supplier<BufferBuilder> worldRenderer, boolean renderPrimary, boolean renderCutout) {
 		boolean rendered = false;
-		if(renderPrimary) rendered = renderWorldBlockBase(ctx, dispatcher, renderer, layer);
+		if(renderPrimary) rendered = renderBase.get();
 		if(!renderCutout) return rendered;
 		
 		boolean[] side = new boolean[6];
@@ -83,9 +83,10 @@ public class RenderCoral extends RenderingHandler {
 		
 		ModelRenderer modelRenderer = ModelRenderer.MODEL_RENDERER.get();
 		modelRenderer.updateShading(side);
-		
+		BufferBuilder renderer = null;
 		for(int i = 0; i < MathUtil.FORGEDIRS.length; i++) {
 			if(side[i]) {
+				if(renderer == null) renderer = worldRenderer.get();
 				int variation = ctx.getRandom(6);
 				modelRenderer.render(
 						renderer,

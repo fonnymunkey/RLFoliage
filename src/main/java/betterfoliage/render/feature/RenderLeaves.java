@@ -16,11 +16,11 @@ import betterfoliage.render.util.RenderUtil;
 import betterfoliage.render.util.ShaderUtil;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+
+import java.util.function.Supplier;
 
 public class RenderLeaves extends RenderingHandler {
 	public static final RenderLeaves RENDER_LEAVES = new RenderLeaves();
@@ -54,9 +54,9 @@ public class RenderLeaves extends RenderingHandler {
 	}
 	
 	@Override
-	public boolean render(BlockContext ctx, BlockRendererDispatcher dispatcher, BufferBuilder renderer, BlockRenderLayer layer, boolean renderPrimary, boolean renderCutout) {
+	public boolean render(BlockContext ctx, Supplier<Boolean> renderBase, Supplier<BufferBuilder> worldRenderer, boolean renderPrimary, boolean renderCutout) {
 		boolean rendered = false;
-		if(renderPrimary) rendered = renderWorldBlockBase(ctx, dispatcher, renderer, layer);
+		if(renderPrimary) rendered = renderBase.get();
 		if(!renderCutout) return rendered;
 		
 		IBlockState state = ctx.getState();
@@ -84,6 +84,7 @@ public class RenderLeaves extends RenderingHandler {
 		modelRenderer.updateShading();
 		boolean isSnowed = RenderUtil.isSnow(ctx.getState(0, 1, 0).getMaterial());
 		
+		BufferBuilder renderer = worldRenderer.get();
 		OptifineCompatWrapper.leaves(renderer, ForgeConfigHandler.LEAVES.shaderWind, () -> {
 			int[] rand = ctx.getSemiRandomArray(2);
 			Rotation[] rots = ForgeConfigHandler.LEAVES.dense ? DENSE_LEAVES_ROT : NORMAL_LEAVES_ROT;

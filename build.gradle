@@ -10,7 +10,7 @@ version = mod_version
 group = mod_id
 base.archivesName = 'RLFoliage-MC1.12-J21'
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+java.toolchain.languageVersion = JavaLanguageVersion.of(8)
 
 fancyGradle {
     patches {

@@ -10,11 +10,11 @@ import betterfoliage.render.util.RenderUtil;
 import betterfoliage.render.util.ShaderUtil;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import org.apache.logging.log4j.Level;
+
+import java.util.function.Supplier;
 
 public class RenderMycelium extends RenderingHandler {
 	public static final RenderMycelium RENDER_MYCELIUM = new RenderMycelium();
@@ -45,9 +45,9 @@ public class RenderMycelium extends RenderingHandler {
 	}
 	
 	@Override
-	public boolean render(BlockContext ctx, BlockRendererDispatcher dispatcher, BufferBuilder renderer, BlockRenderLayer layer, boolean renderPrimary, boolean renderCutout) {
+	public boolean render(BlockContext ctx, Supplier<Boolean> renderBase, Supplier<BufferBuilder> worldRenderer, boolean renderPrimary, boolean renderCutout) {
 		boolean rendered = false;
-		if(renderPrimary) rendered = renderWorldBlockBase(ctx, dispatcher, renderer, layer);
+		if(renderPrimary) rendered = renderBase.get();
 		if(!renderCutout) return rendered;
 		
 		IBlockState up = ctx.getState(0, 1, 0);
@@ -63,6 +63,7 @@ public class RenderMycelium extends RenderingHandler {
 		
 		IconSet iconSet = isSnowed ? this.mycelSnowIcons : this.mycelNormalIcons;
 		int[] rand = ctx.getSemiRandomArray(2);
+		BufferBuilder renderer = worldRenderer.get();
 		OptifineCompatWrapper.grass(renderer, ForgeConfigHandler.SHORTGRASS.shaderWind, () -> modelRenderer.render(
 				renderer,
 				mycelModels.get(rand[0]),

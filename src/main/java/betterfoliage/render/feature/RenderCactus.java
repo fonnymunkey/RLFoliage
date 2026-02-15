@@ -10,11 +10,11 @@ import betterfoliage.render.model.Model;
 import betterfoliage.render.registry.CactusRegistry;
 import betterfoliage.render.util.MathUtil;
 import betterfoliage.render.util.ShaderUtil;
-import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import org.apache.logging.log4j.Level;
+
+import java.util.function.Supplier;
 
 public class RenderCactus extends RenderingHandler {
 	public static final RenderCactus RENDER_CACTUS = new RenderCactus();
@@ -83,19 +83,21 @@ public class RenderCactus extends RenderingHandler {
 	}
 	
 	@Override
-	public boolean render(BlockContext ctx, BlockRendererDispatcher dispatcher, BufferBuilder renderer, BlockRenderLayer layer, boolean renderPrimary, boolean renderCutout) {
+	public boolean render(BlockContext ctx, Supplier<Boolean> renderBase, Supplier<BufferBuilder> worldRenderer, boolean renderPrimary, boolean renderCutout) {
 		boolean rendered = false;
 		
 		CactusRegistry.CactusInfo cactusInfo = CactusRegistry.CACTUS_REGISTRY.get(ctx);
 		if(cactusInfo == null) {
 			logRenderError(ctx.getState(), ctx.getPos());
-			return renderPrimary && renderWorldBlockBase(ctx, dispatcher, renderer, layer);
+			return renderPrimary && renderBase.get();
 		}
 		
 		ModelRenderer modelRenderer = ModelRenderer.MODEL_RENDERER.get();
 		modelRenderer.updateShading();
 		
+		BufferBuilder renderer = null;
 		if(renderPrimary) {
+			renderer = worldRenderer.get();
 			modelRenderer.render(
 					renderer,
 					modelStem.model,
@@ -110,6 +112,7 @@ public class RenderCactus extends RenderingHandler {
 		
 		if(!renderCutout) return rendered;
 		
+		if(renderer == null) renderer = worldRenderer.get();
 		modelRenderer.render(
 				renderer,
 				modelCross.get(ctx.getRandom(0)),

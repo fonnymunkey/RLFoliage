@@ -12,11 +12,11 @@ import betterfoliage.render.shader.FlatOffsetNoColor;
 import betterfoliage.render.util.MathUtil;
 import betterfoliage.render.util.ShaderUtil;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import org.apache.logging.log4j.Level;
+
+import java.util.function.Supplier;
 
 public class RenderReeds extends RenderingHandler {
 	public static final RenderReeds RENDER_REEDS = new RenderReeds();
@@ -64,14 +64,15 @@ public class RenderReeds extends RenderingHandler {
 	}
 	
 	@Override
-	public boolean render(BlockContext ctx, BlockRendererDispatcher dispatcher, BufferBuilder renderer, BlockRenderLayer layer, boolean renderPrimary, boolean renderCutout) {
+	public boolean render(BlockContext ctx, Supplier<Boolean> renderBase, Supplier<BufferBuilder> worldRenderer, boolean renderPrimary, boolean renderCutout) {
 		boolean rendered = false;
-		if(renderPrimary) rendered = renderWorldBlockBase(ctx, dispatcher, renderer, layer);
+		if(renderPrimary) rendered = renderBase.get();
 		if(!renderCutout) return rendered;
 		
 		ModelRenderer modelRenderer = ModelRenderer.MODEL_RENDERER.get();
 		
 		int iconVar = ctx.getRandom(1);
+		BufferBuilder renderer = worldRenderer.get();
 		OptifineCompatWrapper.grass(renderer, ForgeConfigHandler.REED.shaderWind, () -> modelRenderer.render(
 				renderer,
 				reedModels.get(ctx.getRandom(0)),
