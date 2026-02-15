@@ -51,12 +51,12 @@ public class EntityFallingLeavesFX extends AbstractEntityFX {
 	@Override
 	public void update() {
 		if(this.rand.nextFloat() > 0.95F) this.rotPositive = !this.rotPositive;
-		if(this.particleAge > this.particleMaxAge - 20) this.particleAlpha = 0.05F * (this.particleMaxAge - this.particleAge);
+		if(this.particleAge > this.particleMaxAge - 20 && ForgeConfigHandler.FALLINGLEAVES.fadeOut) this.particleAlpha = 0.05F * (this.particleMaxAge - this.particleAge);
 		
 		if(this.onGround || this.wasCollided) {
 			this.velocity.setTo(0.0, 0.0, 0.0);
 			if(!this.wasCollided) {
-				this.particleAge = Math.max(this.particleAge, this.particleMaxAge - 20);
+				this.particleAge = ForgeConfigHandler.FALLINGLEAVES.fadeOut ? Math.max(this.particleAge, this.particleMaxAge - 20) : this.particleMaxAge;
 				this.wasCollided = true;
 			}
 		}

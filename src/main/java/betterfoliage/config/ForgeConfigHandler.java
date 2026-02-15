@@ -512,6 +512,10 @@ public class ForgeConfigHandler {
 		@Config.Name("Opacity Hack")
 		@Config.LangKey("betterfoliage.fallingLeaves.opacityHack")
 		public boolean opacityHack = false;
+		
+		@Config.Name("Fade Out")
+		@Config.LangKey("betterfoliage.fallingLeaves.fadeOut")
+		public boolean fadeOut = true;
 	}
 	
 	@MixinConfig(name = BetterFoliage.MODID)
