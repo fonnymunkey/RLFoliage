@@ -555,7 +555,7 @@ public class ForgeConfigHandler {
 				"Adjusts block layer rendering to render cutout textures using mipmaps if enabled (Better visually)" + "\n" +
 				"Can be disabled if other mods cause issues rendering cutout mipmaps, if disabled it will prefer non-mipmap cutout rendering")
 		@Config.Name("Render Layer Adjustments")
-		public boolean renderLayerAdjustments = true;
+		public boolean renderLayerAdjustments = false;
 	}
 	
 	public static class Leaves {
