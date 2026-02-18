@@ -2,6 +2,7 @@ package betterfoliage.mixin;
 
 import betterfoliage.config.ForgeConfigHandler;
 import betterfoliage.render.feature.particle.EntityFallingLeavesFX;
+import betterfoliage.render.feature.particle.EntityFallingLeavesModernFX;
 import betterfoliage.render.feature.particle.EntityRisingSoulFX;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.block.state.IBlockState;
@@ -47,7 +48,10 @@ public abstract class WorldClientMixin extends World {
 			pos.setPos(pos.getX(), pos.getY() - 1, pos.getZ());
 			boolean render = this.isAirBlock(pos);
 			pos.setPos(pos.getX(), pos.getY() + 1, pos.getZ());
-			if(render) new EntityFallingLeavesFX(this, pos, state).addIfValid();
+			if(render) {
+				if(ForgeConfigHandler.FALLINGLEAVES.modernized) new EntityFallingLeavesModernFX(this, pos, state).addIfValid();
+				else new EntityFallingLeavesFX(this, pos, state).addIfValid();
+			}
 		}
 	}
 }

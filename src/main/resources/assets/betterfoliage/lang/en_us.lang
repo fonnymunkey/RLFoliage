@@ -176,6 +176,8 @@ betterfoliage.fallingLeaves.opacityHack=Opaque particles
 betterfoliage.fallingLeaves.opacityHack.tooltip=Stop transparent blocks obscuring particles even when particle is in front. WARNING: may cause glitches.
 betterfoliage.fallingLeaves.fadeOut=Fade out
 betterfoliage.fallingLeaves.fadeOut.tooltip=As falling leaves reach their max age or land on a block, they will begin to fade out before disappearing, rather than disappearing instantly
+betterfoliage.fallingLeaves.modernized=Modernized Leaves
+betterfoliage.fallingLeaves.modernized.tooltip=A simplified preset version of the leaf physics to match modern minecraft falling leaves, ignores config options except chance and size
 
 betterfoliage.risingSoul=Rising Souls
 betterfoliage.risingSoul.tooltip=Rising soul particle FX emitted from the top of soulsand blocks

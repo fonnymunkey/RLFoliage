@@ -516,6 +516,10 @@ public class ForgeConfigHandler {
 		@Config.Name("Fade Out")
 		@Config.LangKey("betterfoliage.fallingLeaves.fadeOut")
 		public boolean fadeOut = true;
+		
+		@Config.Name("Modernized Leaves")
+		@Config.LangKey("betterfoliage.fallingLeaves.modernized")
+		public boolean modernized = false;
 	}
 	
 	@MixinConfig(name = BetterFoliage.MODID)

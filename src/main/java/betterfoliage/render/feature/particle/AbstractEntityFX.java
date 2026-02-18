@@ -11,13 +11,13 @@ import net.minecraft.entity.Entity;
 import net.minecraft.world.World;
 
 public abstract class AbstractEntityFX extends Particle {
-	protected static final double[] SIN = new double[64];
-	protected static final double[] COS = new double[64];
+	protected static final double[] SIN = new double[128];
+	protected static final double[] COS = new double[128];
 	
 	static {
-		for(int i = 0; i < 64; i++) {
-			SIN[i] = Math.sin(Math.PI * 2.0 / 64.0 * (double)i);
-			COS[i] = Math.cos(Math.PI * 2.0 / 64.0 * (double)i);
+		for(int i = 0; i < 128; i++) {
+			SIN[i] = Math.sin((double)i * Math.PI / 64.0);
+			COS[i] = Math.cos((double)i * Math.PI / 64.0);
 		}
 	}
 	
@@ -84,8 +84,8 @@ public abstract class AbstractEntityFX extends Particle {
 		double maxV = icon.getMaxV();
 		
 		Double3 center = currentPos.minus(prevPos).mul(partialTickTime).add(prevPos).sub(interpPosX, interpPosY, interpPosZ);
-		Double3 v1 = rotation == 0 ? this.billboardRot.l.times(size) : MathUtil.weight(this.billboardRot.l, COS[rotation & 63] * size, this.billboardRot.r, SIN[rotation & 63] * size);
-		Double3 v2 = rotation == 0 ? this.billboardRot.r.times(size) : MathUtil.weight(this.billboardRot.l, -SIN[rotation & 63] * size, this.billboardRot.r, COS[rotation & 63] * size);
+		Double3 v1 = rotation == 0 ? this.billboardRot.l.times(size) : MathUtil.weight(this.billboardRot.l, COS[rotation & 127] * size, this.billboardRot.r, SIN[rotation & 127] * size);
+		Double3 v2 = rotation == 0 ? this.billboardRot.r.times(size) : MathUtil.weight(this.billboardRot.l, -SIN[rotation & 127] * size, this.billboardRot.r, COS[rotation & 127] * size);
 		
 		int renderBrightness = this.getBrightnessForRender(partialTickTime);
 		int brLow = (renderBrightness >> 16) & 65535;

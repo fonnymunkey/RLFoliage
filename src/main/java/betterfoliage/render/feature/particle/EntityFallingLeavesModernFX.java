@@ -4,32 +4,37 @@ import betterfoliage.config.ForgeConfigHandler;
 import betterfoliage.render.model.HSB;
 import betterfoliage.render.registry.LeafParticleRegistry;
 import betterfoliage.render.registry.LeafRegistry;
-import betterfoliage.render.util.MathUtil;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
-import org.lwjgl.opengl.GL11;
 
-public class EntityFallingLeavesFX extends AbstractEntityFX {
+public class EntityFallingLeavesModernFX extends AbstractEntityFX {
 	private static final float biomeBrightnessMultiplier = 0.5F;
 	
 	private final boolean isMirrored;
 	private int particleRot;
-	private boolean rotPositive = true;
-	private boolean wasCollided = false;
 	
-	public EntityFallingLeavesFX(World worldIn, BlockPos pos, IBlockState state) {
+	private float rotSpeed;
+	private float roll;
+	private final float spinAcceleration;
+	private final double swirlPeriod;
+	private static final float angleTo128rad = 128.0F / 360.0F;
+	
+	public EntityFallingLeavesModernFX(World worldIn, BlockPos pos, IBlockState state) {
 		super(worldIn, (double)pos.getX() + 0.5, (double)pos.getY(), (double)pos.getZ() + 0.5);
 		
-		this.isMirrored = (this.rand.nextInt() & 1) == 1;
-		this.particleRot = this.rand.nextInt(128);
+		this.isMirrored = this.rand.nextBoolean();
+		this.particleRot = 0;
 		
-		this.particleMaxAge = MathHelper.floor(MathUtil.random(0.6, 1.0) * ForgeConfigHandler.FALLINGLEAVES.lifetime * 20.0);
-		this.motionY = -ForgeConfigHandler.FALLINGLEAVES.speed;
-		this.particleScale = (float)ForgeConfigHandler.FALLINGLEAVES.size * 0.1F;
+		this.rotSpeed = angleTo128rad * (this.rand.nextBoolean() ? 30.0F : -30.0F);
+		this.spinAcceleration = angleTo128rad * (this.rand.nextBoolean() ? 5.0F : -5.0F);
+		this.particleMaxAge = 300;
+		this.particleScale = (8.0F/3.0F) * (this.rand.nextBoolean() ? 0.05F : 0.075F) * (float)ForgeConfigHandler.FALLINGLEAVES.size;
+		this.particleGravity = 0.00021F;
+		this.motionY = -0.021;
+		this.swirlPeriod = angleTo128rad * (1000.0F + this.rand.nextFloat() * 3000.0F);
 		
 		int blockColor = Minecraft.getMinecraft().getBlockColors().colorMultiplier(state, worldIn, pos, 0);
 		LeafRegistry.LeafInfo leafInfo = LeafRegistry.LEAF_REGISTRY.get(state, worldIn, pos);
@@ -50,29 +55,23 @@ public class EntityFallingLeavesFX extends AbstractEntityFX {
 	
 	@Override
 	public void update() {
-		if(this.rand.nextFloat() > 0.95F) this.rotPositive = !this.rotPositive;
-		if(this.particleAge > this.particleMaxAge - 20 && ForgeConfigHandler.FALLINGLEAVES.fadeOut) this.particleAlpha = 0.05F * (this.particleMaxAge - this.particleAge);
-		
-		if(this.onGround || this.wasCollided) {
+		if(this.onGround || this.particleAge > 1 && (this.motionX == 0.0F || this.motionZ == 0.0F)) {
 			this.velocity.setTo(0.0, 0.0, 0.0);
-			if(!this.wasCollided) {
-				this.particleAge = ForgeConfigHandler.FALLINGLEAVES.fadeOut ? Math.max(this.particleAge, this.particleMaxAge - 20) : this.particleMaxAge;
-				this.wasCollided = true;
-			}
+			this.particleAge = this.particleMaxAge;
 		}
 		else {
-			this.velocity.setTo(COS[particleRot], 0.0, SIN[particleRot])
-						 .mul(ForgeConfigHandler.FALLINGLEAVES.perturb)
-						 .add(LeafWindTracker.LEAF_WIND_TRACKER.current)
-						 .add(0.0, -1.0, 0.0)
-						 .mul(ForgeConfigHandler.FALLINGLEAVES.speed);
-			this.particleRot = (this.particleRot + (rotPositive ? 2 : -2)) & 127;
+			double agePerc = Math.min((float)this.particleAge / 300.0F, 1.0F);
+			double d0 = agePerc * COS[(int)(agePerc * this.swirlPeriod) & 127] * 10.0D;
+			double d1 = agePerc * SIN[(int)(agePerc * this.swirlPeriod) & 127] * 10.0D;
+			this.velocity.mul(1.0 / 0.98).add(0.0025D * d0, -0.00021D, 0.0025D * d1);
+			this.rotSpeed += this.spinAcceleration / 20.0F;
+			this.roll += this.rotSpeed / 20.0F;
+			this.particleRot = (int)this.roll & 127;
 		}
 	}
 	
 	@Override
 	public void render(BufferBuilder worldRenderer, float partialTickTime) {
-		if(ForgeConfigHandler.FALLINGLEAVES.opacityHack) GL11.glDepthMask(true);
 		this.renderParticleQuad(worldRenderer, partialTickTime, this.particleRot, this.isMirrored);
 	}
 	

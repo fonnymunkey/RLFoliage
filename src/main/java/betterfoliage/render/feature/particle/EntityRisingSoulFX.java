@@ -20,7 +20,7 @@ public class EntityRisingSoulFX extends AbstractEntityFX {
 		this.particleGravity = 0.0F;
 		this.particleTexture = RisingSoulResources.RISING_SOUL_RESOURCES.headIcons.get(this.rand.nextInt(256));
 		this.particleMaxAge = MathHelper.floor((0.6 + 0.4 * this.rand.nextDouble()) * ForgeConfigHandler.RISINGSOUL.lifetime * 20.0);
-		this.initialPhase = this.rand.nextInt(64);
+		this.initialPhase = this.rand.nextInt(128);
 	}
 	
 	@Override
@@ -30,7 +30,7 @@ public class EntityRisingSoulFX extends AbstractEntityFX {
 	
 	@Override
 	public void update() {
-		int phase = (this.initialPhase + this.particleAge) % 64;
+		int phase = (this.initialPhase + this.particleAge * 2) & 127;
 		this.velocity.setTo(COS[phase] * ForgeConfigHandler.RISINGSOUL.perturb, ForgeConfigHandler.RISINGSOUL.speed, SIN[phase] * ForgeConfigHandler.RISINGSOUL.perturb);
 		
 		this.particleTrail.addFirst(new Double3(this.currentPos.x, this.currentPos.y, this.currentPos.z));
