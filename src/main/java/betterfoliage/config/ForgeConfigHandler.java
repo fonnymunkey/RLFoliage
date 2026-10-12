@@ -127,7 +127,7 @@ public class ForgeConfigHandler {
 		private transient final BitSet biomeIds = new BitSet();
 		
 		public boolean isBiomeValid(int id) {
-			return this.biomeIds.get(id);
+			return id >= 0 && this.biomeIds.get(id);
 		}
 		
 		public void refreshConfig() {
