@@ -4,6 +4,7 @@ import betterfoliage.config.ForgeConfigHandler;
 import betterfoliage.render.model.HSB;
 import betterfoliage.render.registry.LeafParticleRegistry;
 import betterfoliage.render.registry.LeafRegistry;
+import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -21,6 +22,7 @@ public class EntityFallingLeavesModernFX extends AbstractEntityFX {
 	private final float spinAcceleration;
 	private final double swirlPeriod;
 	private static final float angleTo128rad = 128.0F / 360.0F;
+	private boolean wasCollided = false;
 	
 	public EntityFallingLeavesModernFX(World worldIn, BlockPos pos, IBlockState state) {
 		super(worldIn, (double)pos.getX() + 0.5, (double)pos.getY(), (double)pos.getZ() + 0.5);
@@ -55,9 +57,21 @@ public class EntityFallingLeavesModernFX extends AbstractEntityFX {
 	
 	@Override
 	public void update() {
-		if(this.onGround || this.particleAge > 1 && (this.motionX == 0.0F || this.motionZ == 0.0F)) {
+		if(this.particleAge > this.particleMaxAge - 20 && ForgeConfigHandler.FALLINGLEAVES.fadeOut) this.particleAlpha = 0.05F * (this.particleMaxAge - this.particleAge);
+		
+		boolean water = false;
+		boolean lava = false;
+		if(!this.onGround && !this.wasCollided) {
+			water = this.world.isMaterialInBB(this.getBoundingBox().offset(0.0, 0.05, 0.0), Material.WATER);
+			lava = this.world.isMaterialInBB(this.getBoundingBox().offset(0.0, 0.05, 0.0), Material.LAVA);
+		}
+		
+		if(this.onGround || this.wasCollided || water || lava || this.particleAge > 1 && (this.motionX == 0.0F || this.motionZ == 0.0F)) {
 			this.velocity.setTo(0.0, 0.0, 0.0);
-			this.particleAge = this.particleMaxAge;
+			if(!this.wasCollided) {
+				this.particleAge = ForgeConfigHandler.FALLINGLEAVES.fadeOut && !lava ? Math.max(this.particleAge, this.particleMaxAge - 20) : this.particleMaxAge;
+				this.wasCollided = true;
+			}
 		}
 		else {
 			double agePerc = Math.min((float)this.particleAge / 300.0F, 1.0F);

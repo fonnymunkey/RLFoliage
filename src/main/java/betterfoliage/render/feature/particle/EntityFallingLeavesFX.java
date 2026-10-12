@@ -5,6 +5,7 @@ import betterfoliage.render.model.HSB;
 import betterfoliage.render.registry.LeafParticleRegistry;
 import betterfoliage.render.registry.LeafRegistry;
 import betterfoliage.render.util.MathUtil;
+import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -53,10 +54,17 @@ public class EntityFallingLeavesFX extends AbstractEntityFX {
 		if(this.rand.nextFloat() > 0.95F) this.rotPositive = !this.rotPositive;
 		if(this.particleAge > this.particleMaxAge - 20 && ForgeConfigHandler.FALLINGLEAVES.fadeOut) this.particleAlpha = 0.05F * (this.particleMaxAge - this.particleAge);
 		
-		if(this.onGround || this.wasCollided) {
+		boolean water = false;
+		boolean lava = false;
+		if(!this.onGround && !this.wasCollided) {
+			water = this.world.isMaterialInBB(this.getBoundingBox().offset(0.0, 0.05, 0.0), Material.WATER);
+			lava = this.world.isMaterialInBB(this.getBoundingBox().offset(0.0, 0.05, 0.0), Material.LAVA);
+		}
+		
+		if(this.onGround || this.wasCollided || water || lava) {
 			this.velocity.setTo(0.0, 0.0, 0.0);
 			if(!this.wasCollided) {
-				this.particleAge = ForgeConfigHandler.FALLINGLEAVES.fadeOut ? Math.max(this.particleAge, this.particleMaxAge - 20) : this.particleMaxAge;
+				this.particleAge = ForgeConfigHandler.FALLINGLEAVES.fadeOut && !lava ? Math.max(this.particleAge, this.particleMaxAge - 20) : this.particleMaxAge;
 				this.wasCollided = true;
 			}
 		}
